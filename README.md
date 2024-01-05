@@ -14,7 +14,7 @@ After cloning the repository, you may want to precompile the master header ```cp
 
 For general users, simply ```#include<cpdsa.hpp>```.
 
-For programming contestants:
+For competitive programmers:
 - all headers in the ```containers``` directory are independent and therefore copy-pasteable.
 
 ## Reliability
