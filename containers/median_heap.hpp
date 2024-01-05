@@ -88,7 +88,7 @@ struct median_heap {
     /**
      *  @brief  Returns the number of elements in the container.
      */
-    size size() const { return lower_heap.size() + higher_heap.size(); }
+    size_t size() const { return lower_heap.size() + higher_heap.size(); }
 
     /**
      *  @brief  Returns true if the container is empty.
