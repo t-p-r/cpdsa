@@ -6,7 +6,6 @@
 /**
  * @brief A standard container automatically maintaining its median.
  *
- * @ingroup sequences
  *
  * @tparam _Tp Type of element.
  *
