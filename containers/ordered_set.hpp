@@ -1,6 +1,6 @@
 // Ordered set implementation -*- C++ -*-
+#include <climits>  // for INT_MIN and INT_MAX
 #include "ordered_set_base.hpp"
-#include <climits> // for INT_MIN and INT_MAX
 
 #ifndef CPDSA_ORDERED_SET
 #define CPDSA_ORDERED_SET
@@ -22,7 +22,7 @@ namespace cpdsa {
  * to suit specific needs (i.e. if @c _Tp is long long).
  */
 template <typename _Tp, _Tp LB = INT_MIN, _Tp RB = INT_MAX>
-class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
+class ordered_set : private ordered_set_base<_Tp, LB, RB> {
    public:
     /**
      * @brief Create an ordered_set with no elements.
@@ -114,7 +114,8 @@ class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp lower_bound(const _Tp& val) const noexcept {
-        return this->lower_bound(this->root, LB, RB, val);
+        return ordered_set_base<_Tp, LB, RB>::lower_bound(this->root, LB, RB,
+                                                          val);
     }
 
     /**
@@ -123,7 +124,8 @@ class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp upper_bound(const _Tp& val) const noexcept {
-        return this->upper_bound(this->root, LB, RB, val);
+        return ordered_set_base<_Tp, LB, RB>::upper_bound(this->root, LB, RB,
+                                                          val);
     }
 };
 }  // namespace cpdsa
