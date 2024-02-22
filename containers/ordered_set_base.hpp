@@ -66,8 +66,9 @@ class ordered_set_base {
 
     std::shared_ptr<node> root;
 
-    explicit ordered_set_base() : root(new node()) {
+    ordered_set_base() {
         static_assert(std::is_integral<_Tp>());
+        root = std::shared_ptr<node>(new node());
     }
 
     /**
@@ -124,7 +125,9 @@ class ordered_set_base {
      * @param val Value being updated.
      * @param action Action specified (see @c NODE_UPDATE_ACTIONS)
      */
-    constexpr void update_leaf(std::shared_ptr<node> leaf, _Tp val, int action) {
+    constexpr void update_leaf(std::shared_ptr<node> leaf,
+                               _Tp val,
+                               int action) {
         if (leaf->cnt == 0 && (action == REMOVE_ONCE || action == REMOVE_ALL))
             return;
 
