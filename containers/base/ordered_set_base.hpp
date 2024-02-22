@@ -8,6 +8,8 @@
 namespace cpdsa {
 /**
  * @brief Background implementation for ordered_set.
+ * 
+ * @note Use hassle-free ```std::shared_ptr<>``` for ease of maintaining and expanding.
  */
 template <typename _Tp, _Tp LB, _Tp RB>
 class ordered_set_base {

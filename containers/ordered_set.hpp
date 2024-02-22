@@ -18,8 +18,8 @@ namespace cpdsa {
  * @tparam RB One past the largest value allowed to be added.
  *
  * @note An implementation of a dynamic segment tree. Operations
- * have time complexity O(log(RB - LB)). @c LB and @c RB should be changed
- * to suit specific needs (i.e. if @c _Tp is long long).
+ * have time complexity ```O(log(X))``` where ```X = RB - LB```. @c LB and @c RB
+ * should be changed to suit specific needs (i.e. if @c _Tp is ```long long```).
  */
 template <typename _Tp, _Tp LB = INT_MIN, _Tp RB = INT_MAX>
 class ordered_set : private ordered_set_base<_Tp, LB, RB> {
@@ -117,8 +117,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp lower_bound(const _Tp& val) const noexcept {
-        return Base::lower_bound(this->root, LB, RB,
-                                                          val);
+        return Base::lower_bound(this->root, LB, RB, val);
     }
 
     /**
@@ -127,8 +126,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp upper_bound(const _Tp& val) const noexcept {
-        return Base::upper_bound(this->root, LB, RB,
-                                                          val);
+        return Base::upper_bound(this->root, LB, RB, val);
     }
 };
 }  // namespace cpdsa
