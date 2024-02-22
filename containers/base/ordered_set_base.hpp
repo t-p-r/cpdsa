@@ -147,8 +147,8 @@ class ordered_set_base {
                 break;
         }
 
-        leaf->lowest_value = leaf->cnt ? val : RB;
-        leaf->highest_value = leaf->cnt ? val : LB;
+        leaf->lowest_value = (leaf->cnt ? val : RB);
+        leaf->highest_value = (leaf->cnt ? val : LB);
     }
 
     /**
