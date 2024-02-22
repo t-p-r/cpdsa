@@ -1,6 +1,6 @@
 // Ordered set implementation -*- C++ -*-
 #include <climits>  // for INT_MIN and INT_MAX
-#include "ordered_set_base.hpp"
+#include "./base/ordered_set_base.hpp"
 
 #ifndef CPDSA_ORDERED_SET
 #define CPDSA_ORDERED_SET

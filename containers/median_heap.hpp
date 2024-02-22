@@ -32,7 +32,18 @@ struct median_heap {
     std::priority_queue<_Tp> lower_heap;
     std::priority_queue<_Tp, std::vector<_Tp>, std::greater<_Tp>> higher_heap;
 
-    void balance();
+    void balance() {
+        if (higher_heap.size() - 1 > lower_heap.size()) {
+            int __x = higher_heap.top();
+            higher_heap.pop();
+            lower_heap.push(__x);
+        }
+        if (lower_heap.size() > higher_heap.size()) {
+            int __x = lower_heap.top();
+            lower_heap.pop();
+            higher_heap.push(__x);
+        }
+    }
 
    public:
     /**
@@ -46,38 +57,65 @@ struct median_heap {
      *  @brief  Add data to the container.
      *  @param __x Data to be added.
      */
-    void push(const _Tp& __x);
+    void push(const _Tp& __x) {
+        if (higher_heap.empty() || __x >= higher_heap.top())
+            higher_heap.push(__x);
+        else
+            lower_heap.push(__x);
+        balance();
+    }
 
     /**
      *  @brief  Returns the discrete median (with a container of size @c n, its
      * (n+1)/2-th largest element) of the container.
      */
-    [[nodiscard]] constexpr _Tp discrete_median() const;
+    [[nodiscard]] constexpr _Tp discrete_median() const {
+        if (lower_heap.size() == higher_heap.size())
+            return lower_heap.top();
+        return higher_heap.top();
+    }
 
     /**
      *  @brief  Remove the discrete median of the container.
      */
-    void pop();
+    void pop() {
+        if (lower_heap.size() == higher_heap.size())
+            lower_heap.pop();
+        else
+            higher_heap.pop();
+        balance();
+    }
 
     /**
      *  @brief  Returns the number of elements in the container.
      */
-    [[nodiscard]] constexpr size_t size() const;
+    [[nodiscard]] constexpr size_t size() const {
+        return lower_heap.size() + higher_heap.size();
+    }
 
     /**
      *  @brief  Returns true if the container is empty.
      */
-    [[nodiscard]] constexpr bool empty() const;
+    [[nodiscard]] constexpr bool empty() const { return !size(); }
 
     /**
      *  @brief  Remove all elements from the container.
      */
-    void clear();
+    void clear() {
+        while (!lower_heap.empty())
+            lower_heap.pop();
+        while (!higher_heap.empty())
+            higher_heap.pop();
+    }
 
     /**
      *  @brief  Returns the median of the container.
      */
-    [[nodiscard]] constexpr double median() const;
+    [[nodiscard]] constexpr double median() const {
+        if (lower_heap.size() == higher_heap.size())
+            return 1.0 * (lower_heap.top() + higher_heap.top()) / 2;
+        return higher_heap.top();
+    }
 };
 }  // namespace cpdsa
 
