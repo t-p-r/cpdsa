@@ -95,14 +95,14 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
     }
 
     /**
-     * @brief Returns the k-th largest element in the container.
+     * @brief Returns the k-th (1-based) largest element in the container.
      *
      * @param k The position of the element to find.
      *
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp find_by_order(const int& k) const noexcept {
-        if (size() >= k)
+        if (static_cast<int>(size()) >= k)
             return this->k_largest(this->root, LB, RB, k);
         else
             return RB;
