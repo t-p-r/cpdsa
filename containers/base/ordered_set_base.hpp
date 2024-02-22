@@ -39,7 +39,11 @@ class ordered_set_base {
             : cnt(EMPTY_NODE_COUNT),
               sum(EMPTY_NODE_SUM),
               lowest_value(EMPTY_NODE_MIN),
-              highest_value(EMPTY_NODE_MAX) {}
+              highest_value(EMPTY_NODE_MAX),
+              left_child(nullptr),
+              right_child(nullptr) {}
+
+        ~node() = default;
 
         /**
          * @brief Returns whether the current node doesn't overlap with the
@@ -77,6 +81,16 @@ class ordered_set_base {
         root = new node();
     }
 
+    void do_delete(node* id) {
+        if (id == NULL_NODE)
+            return;
+        do_delete(id->left_child);
+        do_delete(id->right_child);
+        delete id;
+    }
+
+    ~ordered_set_base() { do_delete(root); }
+
     /**
      * @brief Creates a new node and attaches it to the parent node in the given
      * direction.
@@ -95,32 +109,28 @@ class ordered_set_base {
     /**
      * @brief Wrapper function for cnt
      */
-    [[nodiscard]] constexpr _Tp get_cnt(
-        node* id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_cnt(node* id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_COUNT : id->cnt;
     }
 
     /**
      * @brief Wrapper function for sum.
      */
-    [[nodiscard]] constexpr _Tp get_sum(
-        node* id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_sum(node* id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_SUM : id->sum;
     }
 
     /**
      * @brief Wrapper function for lowest_value.
      */
-    [[nodiscard]] constexpr _Tp get_lowest(
-        node* id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_lowest(node* id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_MIN : id->lowest_value;
     }
 
     /**
      * @brief Wrapper function for highest_value.
      */
-    [[nodiscard]] constexpr _Tp get_highest(
-        node* id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_highest(node* id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_MAX : id->highest_value;
     }
 
@@ -131,9 +141,7 @@ class ordered_set_base {
      * @param val Value being updated.
      * @param action Action specified (see @c NODE_UPDATE_ACTIONS)
      */
-    constexpr void update_leaf(node* leaf,
-                               _Tp val,
-                               int action) {
+    constexpr void update_leaf(node* leaf, _Tp val, int action) {
         if (leaf->cnt == 0 && (action == REMOVE_ONCE || action == REMOVE_ALL))
             return;
 
@@ -215,14 +223,10 @@ class ordered_set_base {
      * @param u Left boundary of the query range.
      * @param v Right boundary of the query range.
      */
-    [[nodiscard]] _Tp get(node* id,
-                          _Tp l,
-                          _Tp r,
-                          _Tp u,
-                          _Tp v) const {
-        if (id == NULL_NODE || id.out_of_bound(u, v))
+    [[nodiscard]] _Tp get(node* id, _Tp l, _Tp r, _Tp u, _Tp v) const {
+        if (id == NULL_NODE || id->out_of_bound(u, v))
             return NULL_NODE_SUM;
-        if (id.contained_by(u, v))
+        if (id->contained_by(u, v))
             return get_cnt(id);
 
         _Tp mid = std::midpoint(l, r);
@@ -242,10 +246,7 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] _Tp k_largest(node* id,
-                                _Tp l,
-                                _Tp r,
-                                int k) const {
+    [[nodiscard]] _Tp k_largest(node* id, _Tp l, _Tp r, int k) const {
         if (id == NULL_NODE)
             return NULL_NODE_MIN;
         if (l == r)
@@ -270,10 +271,7 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] _Tp lower_bound(node* id,
-                                  _Tp l,
-                                  _Tp r,
-                                  _Tp val) const {
+    [[nodiscard]] _Tp lower_bound(node* id, _Tp l, _Tp r, _Tp val) const {
         if (id == NULL_NODE)
             return NULL_NODE_MIN;
         if (l == r)
@@ -297,10 +295,7 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] _Tp upper_bound(node* id,
-                                  _Tp l,
-                                  _Tp r,
-                                  _Tp val) const {
+    [[nodiscard]] _Tp upper_bound(node* id, _Tp l, _Tp r, _Tp val) const {
         if (id == NULL_NODE)
             return NULL_NODE_MIN;
         if (l == r)

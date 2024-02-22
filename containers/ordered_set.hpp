@@ -32,6 +32,8 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      */
     ordered_set() = default;
 
+    ~ordered_set() = default;
+
     /**
      * @brief Returns one past the largest number allowed to be added.
      */
@@ -80,7 +82,10 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
     /**
      * @brief Remove all elements from the container.
      */
-    void clear() { this = new ordered_set(); }
+    void clear() {
+        this->do_delete(this->root);
+        this->root = new Base::node();
+    }
 
     /**
      * @brief Returns the number of elements in the range ```[l,r]```.
@@ -117,8 +122,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp lower_bound(const _Tp& val) const noexcept {
-        return Base::lower_bound(this->root, LB, RB,
-                                                          val);
+        return Base::lower_bound(this->root, LB, RB, val);
     }
 
     /**
@@ -127,8 +131,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp upper_bound(const _Tp& val) const noexcept {
-        return Base::upper_bound(this->root, LB, RB,
-                                                          val);
+        return Base::upper_bound(this->root, LB, RB, val);
     }
 };
 }  // namespace cpdsa
