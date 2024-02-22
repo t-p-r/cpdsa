@@ -7,8 +7,8 @@
 
 namespace cpdsa {
 /**
- * @brief A container allowing for operations on discrete elements
- * and ranges of values in logarithmic time.
+ * @brief A container allowing for operations on discrete values in logarithmic
+ * time.
  *
  * @ingroup sequences
  *
@@ -23,6 +23,9 @@ namespace cpdsa {
  */
 template <typename _Tp, _Tp LB = INT_MIN, _Tp RB = INT_MAX>
 class ordered_set : private ordered_set_base<_Tp, LB, RB> {
+   private:
+    typedef ordered_set_base<_Tp, LB, RB> Base;
+
    public:
     /**
      * @brief Create an ordered_set with no elements.
@@ -56,17 +59,17 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
     }
 
     /**
-     * @brief Remove an element (i.e. one occurence of a value) from the
+     * @brief Remove one occurence of ```val``` from the
      * container.
      *
-     * @param val Value of the element to be removed.
+     * @param val Value to be removed.
      */
-    constexpr void erase(const _Tp& val) {
+    constexpr void erase_once(const _Tp& val) {
         this->update(this->root, LB, RB, val, this->REMOVE_ONCE);
     }
 
     /**
-     * @brief Remove all occurences of a value from the container.
+     * @brief Remove all occurences of ```val``` from the container.
      *
      * @param val Value to be removed.
      */
@@ -114,7 +117,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp lower_bound(const _Tp& val) const noexcept {
-        return ordered_set_base<_Tp, LB, RB>::lower_bound(this->root, LB, RB,
+        return Base::lower_bound(this->root, LB, RB,
                                                           val);
     }
 
@@ -124,7 +127,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp upper_bound(const _Tp& val) const noexcept {
-        return ordered_set_base<_Tp, LB, RB>::upper_bound(this->root, LB, RB,
+        return Base::upper_bound(this->root, LB, RB,
                                                           val);
     }
 };
