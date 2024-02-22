@@ -1,5 +1,6 @@
 // Ordered set implementation -*- C++ -*-
 #include "ordered_set_base.hpp"
+#include <climits> // for INT_MIN and INT_MAX
 
 #ifndef CPDSA_ORDERED_SET
 #define CPDSA_ORDERED_SET
@@ -22,6 +23,7 @@ namespace cpdsa {
  */
 template <typename _Tp, _Tp LB = INT_MIN, _Tp RB = INT_MAX>
 class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
+   public:
     /**
      * @brief Create an ordered_set with no elements.
      */
@@ -37,7 +39,9 @@ class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
     /**
      * @brief Returns the number of elements in the container.
      */
-    [[nodiscard]] constexpr size_t size() const noexcept { return root->cnt; }
+    [[nodiscard]] constexpr size_t size() const noexcept {
+        return this->root->cnt;
+    }
 
     /**
      * @brief Returns true if the container is empty.
@@ -50,7 +54,7 @@ class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be added.
      */
     constexpr void insert(const _Tp& val) {
-        update(root, LB, RB, val, NODE_UPDATE_ACTIONS::ADD_ONCE);
+        this->update(this->root, LB, RB, val, this->ADD_ONCE);
     }
 
     /**
@@ -60,7 +64,7 @@ class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
      * @param val Value of the element to be removed.
      */
     constexpr void erase(const _Tp& val) {
-        update(root, LB, RB, val, NODE_UPDATE_ACTIONS::REMOVE_ONCE);
+        this->update(this->root, LB, RB, val, this->REMOVE_ONCE);
     }
 
     /**
@@ -69,31 +73,27 @@ class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be removed.
      */
     constexpr void erase_all(const _Tp& val) {
-        update(root, LB, RB, val, NODE_UPDATE_ACTIONS::REMOVE_ALL);
+        this->update(this->root, LB, RB, val, this->REMOVE_ALL);
     }
 
     /**
      * @brief Remove all elements from the container.
      */
-    void clear() {
-        clear(root->left_child);
-        clear(root->right_child);
-        root = new node();
-    }
+    void clear() { this = new ordered_set(); }
 
     /**
      * @brief Returns the number of elements in the range ```[l,r]```.
      *
      */
     [[nodiscard]] constexpr int count(_Tp l, _Tp r) const noexcept {
-        return get(root, LB, RB, l, r);
+        return this->get(this->root, LB, RB, l, r);
     }
 
     /**
      * @brief Returns the number of elements less than or equal to @c val.
      */
     [[nodiscard]] constexpr int order_of_key(const _Tp& val) const noexcept {
-        return get(root, LB, RB, LB, val);
+        return this->get(this->root, LB, RB, LB, val);
     }
 
     /**
@@ -104,9 +104,8 @@ class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp find_by_order(const int& k) const noexcept {
-        assert(("Index number must be non-negative", k >= 0));
         if (size() >= k)
-            return k_largest(root, LB, RB, k);
+            return this->k_largest(this->root, LB, RB, k);
         else
             return RB;
     }
@@ -117,7 +116,7 @@ class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp lower_bound(const _Tp& val) const noexcept {
-        return lower_bound(root, LB, RB, val);
+        return this->lower_bound(this->root, LB, RB, val);
     }
 
     /**
@@ -126,7 +125,7 @@ class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp upper_bound(const _Tp& val) const noexcept {
-        return upper_bound(root, LB, RB, val);
+        return this->upper_bound(this->root, LB, RB, val);
     }
 };
 }  // namespace cpdsa
