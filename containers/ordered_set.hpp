@@ -29,8 +29,6 @@ class ordered_set : protected ordered_set_base<_Tp, LB, RB> {
      */
     ordered_set() = default;
 
-    ~ordered_set() = default;
-
     /**
      * @brief Returns one past the largest number allowed to be added.
      */

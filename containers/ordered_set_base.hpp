@@ -35,8 +35,6 @@ class ordered_set_base {
               lowest_value(NULL_NODE_MIN),
               highest_value(NULL_NODE_MAX) {}
 
-        ~node() = default;
-
         /**
          * @brief Returns whether the current node doesn't overlap with the
          * range
@@ -71,8 +69,6 @@ class ordered_set_base {
     explicit ordered_set_base() : root(new node()) {
         static_assert(std::is_integral<_Tp>());
     }
-
-    ~ordered_set_base() = default;
 
     /**
      * @brief Creates a new node and attaches it to the parent node in the given
