@@ -1,5 +1,7 @@
 // Ordered set implementation -*- C++ -*-
 
+#ifndef CPDSA_ORDERED_SET
+#define CPDSA_ORDERED_SET
 /**
  * @brief A container allowing for operations on discrete elements
  * and ranges of values in logarithmic time.
@@ -89,7 +91,7 @@ class ordered_set {
             id->__hi = id->__cnt ? val : _LB;
             return;
         }
-        _Tp mid = std::midpoint(l, r);
+        _Tp mid = midpoint(l, r);
         if (val <= mid) {
             if (id->__l == nullptr)
                 create_node(id, 0);
@@ -120,7 +122,7 @@ class ordered_set {
             return 0;
         if (u <= id->__lo && id->__hi <= v)
             return id->__cnt;
-        _Tp mid = std::midpoint(l, r);
+        _Tp mid = midpoint(l, r);
         return get(id->__l, l, mid, u, v) + get(id->__r, mid + 1, r, u, v);
     }
 
@@ -140,7 +142,7 @@ class ordered_set {
         if (l == r)
             return id->__cnt ? id->__lo : _RB;
 
-        _Tp mid = std::midpoint(l, r);
+        _Tp mid = midpoint(l, r);
         return get_cnt(id->__l) >= k
                    ? k_largest(id->__l, l, mid, k)
                    : k_largest(id->__r, mid + 1, r, k - get_cnt(id->__l));
@@ -161,7 +163,7 @@ class ordered_set {
             return _RB;
         if (l == r)
             return id->__cnt ? id->__lo : _RB;
-        _Tp mid = std::midpoint(l, r);
+        _Tp mid = midpoint(l, r);
         return id->__l != nullptr && get_hi(id->__l) >= val
                    ? lower_bound(id->__l, l, mid, val)
                    : lower_bound(id->__r, mid + 1, r, val);
@@ -183,7 +185,7 @@ class ordered_set {
         if (l == r)
             return id->__cnt ? id->__lo : _RB;
 
-        _Tp mid = std::midpoint(l, r);
+        _Tp mid = midpoint(l, r);
         return id->__r != nullptr && get_lo(id->__r) <= val
                    ? upper_bound(id->__r, mid + 1, r, val)
                    : upper_bound(id->__l, l, mid, val);
@@ -299,3 +301,5 @@ class ordered_set {
      */
     _Tp upper_bound(const _Tp& val) { return upper_bound(root, _LB, _RB, val); }
 };
+
+#endif /* CPDSA_ORDERED_SET */
