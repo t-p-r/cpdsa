@@ -1,6 +1,6 @@
 #include "median_heap.hpp"
 
-using namespace cpdsa;
+namespace cpdsa {
 
 /**
  * @brief Balance the sizes of @c lower_heap and
@@ -69,3 +69,4 @@ template <typename _Tp>
         return 1.0 * (lower_heap.top() + higher_heap.top()) / 2;
     return higher_heap.top();
 }
+}  // namespace cpdsa

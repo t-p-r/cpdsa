@@ -1,10 +1,10 @@
 // Median heap implementation -*- C++ -*-
 
-#ifndef CPDSA_MEDIAN_HEAP
-#define CPDSA_MEDIAN_HEAP
-
 #include <queue>
 #include <vector>
+
+#ifndef CPDSA_MEDIAN_HEAP
+#define CPDSA_MEDIAN_HEAP
 
 namespace cpdsa {
 /**
