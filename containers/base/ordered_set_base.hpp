@@ -32,14 +32,18 @@ class ordered_set_base {
         _Tp highest_value;  // An uninstantiated or null node has
                             // lowest_value = RB and highest_value = LB as
                             // obvious placeholders.
-        std::shared_ptr<node> left_child;
-        std::shared_ptr<node> right_child;  // left and right child
+        node* left_child;
+        node* right_child;  // left and right child
 
         node()
             : cnt(EMPTY_NODE_COUNT),
               sum(EMPTY_NODE_SUM),
               lowest_value(EMPTY_NODE_MIN),
-              highest_value(EMPTY_NODE_MAX) {}
+              highest_value(EMPTY_NODE_MAX),
+              left_child(nullptr),
+              right_child(nullptr) {}
+
+        ~node() = default;
 
         /**
          * @brief Returns whether the current node doesn't overlap with the
@@ -70,12 +74,22 @@ class ordered_set_base {
     static constexpr int REMOVE_ALL = 2;
     enum NODE_DIRECTIONS { LEFT, RIGHT };
 
-    std::shared_ptr<node> root;
+    node* root;
 
     ordered_set_base() {
         static_assert(std::is_integral<_Tp>());
-        root = std::shared_ptr<node>(new node());
+        root = new node();
     }
+
+    void do_delete(node* id) {
+        if (id == NULL_NODE)
+            return;
+        do_delete(id->left_child);
+        do_delete(id->right_child);
+        delete id;
+    }
+
+    ~ordered_set_base() { do_delete(root); }
 
     /**
      * @brief Creates a new node and attaches it to the parent node in the given
@@ -85,42 +99,38 @@ class ordered_set_base {
      * @param __dir The direction in which to attach the new node (0 for left
      * child, 1 for right child).
      */
-    constexpr void create_node(std::shared_ptr<node> par, bool dir) {
+    constexpr void create_node(node* par, bool dir) {
         if (dir == NODE_DIRECTIONS::LEFT)
-            par->left_child = std::shared_ptr<node>(new node());
+            par->left_child = new node();
         else
-            par->right_child = std::shared_ptr<node>(new node());
+            par->right_child = new node();
     }
 
     /**
      * @brief Wrapper function for cnt
      */
-    [[nodiscard]] constexpr _Tp get_cnt(
-        std::shared_ptr<node> id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_cnt(node* id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_COUNT : id->cnt;
     }
 
     /**
      * @brief Wrapper function for sum.
      */
-    [[nodiscard]] constexpr _Tp get_sum(
-        std::shared_ptr<node> id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_sum(node* id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_SUM : id->sum;
     }
 
     /**
      * @brief Wrapper function for lowest_value.
      */
-    [[nodiscard]] constexpr _Tp get_lowest(
-        std::shared_ptr<node> id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_lowest(node* id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_MIN : id->lowest_value;
     }
 
     /**
      * @brief Wrapper function for highest_value.
      */
-    [[nodiscard]] constexpr _Tp get_highest(
-        std::shared_ptr<node> id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_highest(node* id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_MAX : id->highest_value;
     }
 
@@ -131,9 +141,7 @@ class ordered_set_base {
      * @param val Value being updated.
      * @param action Action specified (see @c NODE_UPDATE_ACTIONS)
      */
-    constexpr void update_leaf(std::shared_ptr<node> leaf,
-                               _Tp val,
-                               int action) {
+    constexpr void update_leaf(node* leaf, _Tp val, int action) {
         if (leaf->cnt == 0 && (action == REMOVE_ONCE || action == REMOVE_ALL))
             return;
 
@@ -162,7 +170,7 @@ class ordered_set_base {
      *
      * @param id The current node.
      */
-    constexpr void update_from_childs(std::shared_ptr<node> id) {
+    constexpr void update_from_childs(node* id) {
         id->cnt = get_cnt(id->left_child) + get_cnt(id->right_child);
         id->sum = get_sum(id->left_child) + get_sum(id->right_child);
         id->lowest_value =
@@ -186,7 +194,7 @@ class ordered_set_base {
      * ```update_from_childs```.
      *
      */
-    void update(std::shared_ptr<node> id, _Tp l, _Tp r, _Tp val, int action) {
+    void update(node* id, _Tp l, _Tp r, _Tp val, int action) {
         if (l == r) {
             update_leaf(id, val, action);
             return;
@@ -215,14 +223,10 @@ class ordered_set_base {
      * @param u Left boundary of the query range.
      * @param v Right boundary of the query range.
      */
-    [[nodiscard]] _Tp get(std::shared_ptr<node> id,
-                          _Tp l,
-                          _Tp r,
-                          _Tp u,
-                          _Tp v) const {
-        if (id == NULL_NODE || id.out_of_bound(u, v))
+    [[nodiscard]] _Tp get(node* id, _Tp l, _Tp r, _Tp u, _Tp v) const {
+        if (id == NULL_NODE || id->out_of_bound(u, v))
             return NULL_NODE_SUM;
-        if (id.contained_by(u, v))
+        if (id->contained_by(u, v))
             return get_cnt(id);
 
         _Tp mid = std::midpoint(l, r);
@@ -242,10 +246,7 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] _Tp k_largest(std::shared_ptr<node> id,
-                                _Tp l,
-                                _Tp r,
-                                int k) const {
+    [[nodiscard]] _Tp k_largest(node* id, _Tp l, _Tp r, int k) const {
         if (id == NULL_NODE)
             return NULL_NODE_MIN;
         if (l == r)
@@ -270,10 +271,7 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] _Tp lower_bound(std::shared_ptr<node> id,
-                                  _Tp l,
-                                  _Tp r,
-                                  _Tp val) const {
+    [[nodiscard]] _Tp lower_bound(node* id, _Tp l, _Tp r, _Tp val) const {
         if (id == NULL_NODE)
             return NULL_NODE_MIN;
         if (l == r)
@@ -297,10 +295,7 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] _Tp upper_bound(std::shared_ptr<node> id,
-                                  _Tp l,
-                                  _Tp r,
-                                  _Tp val) const {
+    [[nodiscard]] _Tp upper_bound(node* id, _Tp l, _Tp r, _Tp val) const {
         if (id == NULL_NODE)
             return NULL_NODE_MIN;
         if (l == r)
