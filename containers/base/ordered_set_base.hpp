@@ -1,5 +1,5 @@
 // Ordered set implementation -*- C++ -*-
-#include <memory>
+#include <memory>   // for std::shared_ptr
 #include <numeric>  // for std::midpoint
 
 #ifndef CPDSA_ORDERED_SET_BASE
