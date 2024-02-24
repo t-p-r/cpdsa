@@ -24,7 +24,7 @@ namespace cpdsa {
 template <typename _Tp, _Tp LB = INT_MIN, _Tp RB = INT_MAX>
 class ordered_set : private ordered_set_base<_Tp, LB, RB> {
    private:
-    typedef ordered_set_base<_Tp, LB, RB> Base;
+    using Base = ordered_set_base<_Tp, LB, RB>;
 
    public:
     /**
