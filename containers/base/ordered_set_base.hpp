@@ -99,7 +99,7 @@ class ordered_set_base {
      * @brief Wrapper function for cnt.
      */
     [[nodiscard]] constexpr _Tp get_cnt(
-        std::shared_ptr<node> id) const noexcept {
+        const std::shared_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_COUNT : id->cnt;
     }
 
@@ -107,7 +107,7 @@ class ordered_set_base {
      * @brief Wrapper function for sum.
      */
     [[nodiscard]] constexpr _Tp get_sum(
-        std::shared_ptr<node> id) const noexcept {
+        const std::shared_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_SUM : id->sum;
     }
 
@@ -115,7 +115,7 @@ class ordered_set_base {
      * @brief Wrapper function for lowest_value.
      */
     [[nodiscard]] constexpr _Tp get_lowest(
-        std::shared_ptr<node> id) const noexcept {
+        const std::shared_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_MIN : id->lowest_value;
     }
 
@@ -123,7 +123,7 @@ class ordered_set_base {
      * @brief Wrapper function for highest_value.
      */
     [[nodiscard]] constexpr _Tp get_highest(
-        std::shared_ptr<node> id) const noexcept {
+        const std::shared_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_MAX : id->highest_value;
     }
 
@@ -134,7 +134,7 @@ class ordered_set_base {
      * @param val Value being updated.
      * @param action Action specified (see @c NODE_UPDATE_ACTIONS)
      */
-    constexpr void update_leaf(node& leaf, _Tp val, int action) {
+    constexpr void update_leaf(node& leaf, const _Tp& val, int action) {
         if (leaf.cnt == 0 && (action == REMOVE_ONCE || action == REMOVE_ALL))
             return;
 
@@ -187,7 +187,7 @@ class ordered_set_base {
      * ```update_from_childs```.
      *
      */
-    void update(node& id, _Tp l, _Tp r, _Tp val, int action) {
+    void update(node& id, const _Tp& l, const _Tp& r, const _Tp& val, int action) {
         if (l == r) {
             update_leaf(id, val, action);
             return;
@@ -216,14 +216,14 @@ class ordered_set_base {
      * @param u Left boundary of the query range.
      * @param v Right boundary of the query range.
      */
-    [[nodiscard]] _Tp get(node& id, _Tp l, _Tp r, _Tp u, _Tp v) const {
+    [[nodiscard]] constexpr _Tp get(node& id, const _Tp& l, const _Tp& r, _Tp u, _Tp v) const {
         if (id.out_of_bound(u, v))
             return NULL_NODE_SUM;
         if (id.contained_by(u, v))
             return id.cnt;
 
         _Tp mid = std::midpoint(l, r);
-        _Tp result = 0;
+        const _Tp& result = 0;
         if (id.left_child != NULL_NODE)
             result += get(*(id.left_child), l, mid, u, v);
         if (id.right_child != NULL_NODE)
@@ -243,7 +243,7 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] _Tp k_largest(node& id, _Tp l, _Tp r, int k) const {
+    [[nodiscard]] constexpr _Tp k_largest(node& id, const _Tp& l, const _Tp& r, int k) const {
         if (l == r)
             return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
 
@@ -269,7 +269,7 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] _Tp lower_bound(node& id, _Tp l, _Tp r, _Tp val) const {
+    [[nodiscard]] constexpr _Tp lower_bound(node& id, const _Tp& l, const _Tp& r, const _Tp& val) const {
         if (l == r)
             return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
 
@@ -293,7 +293,7 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] _Tp upper_bound(node& id, _Tp l, _Tp r, _Tp val) const {
+    [[nodiscard]] constexpr _Tp upper_bound(node& id, const _Tp& l, const _Tp& r, const _Tp& val) const {
         if (l == r)
             return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
 
