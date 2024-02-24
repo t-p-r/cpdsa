@@ -55,7 +55,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be added.
      */
     constexpr void insert(const _Tp& val) {
-        this->update(this->root, LB, RB, val, this->ADD_ONCE);
+        Base::update(this->root, LB, RB, val, this->ADD_ONCE);
     }
 
     /**
@@ -65,7 +65,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be removed.
      */
     constexpr void erase_once(const _Tp& val) {
-        this->update(this->root, LB, RB, val, this->REMOVE_ONCE);
+        Base::update(this->root, LB, RB, val, this->REMOVE_ONCE);
     }
 
     /**
@@ -74,7 +74,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be removed.
      */
     constexpr void erase_all(const _Tp& val) {
-        this->update(this->root, LB, RB, val, this->REMOVE_ALL);
+        Base::update(this->root, LB, RB, val, this->REMOVE_ALL);
     }
 
     /**
@@ -87,14 +87,14 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      *
      */
     [[nodiscard]] constexpr int count(_Tp l, _Tp r) const noexcept {
-        return this->get(this->root, LB, RB, l, r);
+        return Base::get(this->root, LB, RB, l, r);
     }
 
     /**
      * @brief Returns the number of elements less than or equal to @c val.
      */
     [[nodiscard]] constexpr int order_of_key(const _Tp& val) const noexcept {
-        return this->get(this->root, LB, RB, LB, val);
+        return Base::get(this->root, LB, RB, LB, val);
     }
 
     /**
@@ -106,7 +106,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      */
     [[nodiscard]] constexpr _Tp find_by_order(const int& k) const noexcept {
         if (static_cast<int>(size()) >= k)
-            return this->k_largest(this->root, LB, RB, k);
+            return Base::k_largest(this->root, LB, RB, k);
         else
             return RB;
     }
