@@ -24,6 +24,8 @@ class ordered_set_base {
     static const int EMPTY_NODE_MIN = RB;
     static const int EMPTY_NODE_MAX = LB;
 
+    std::nullptr_t NULL_NODE;
+
     /**
      * @brief Node implementation.
      */
@@ -61,8 +63,6 @@ class ordered_set_base {
             return (u <= lowest_value && lowest_value <= v);
         }
     };
-
-#define NULL_NODE nullptr
 
    protected:
     // these should have been an enum but
@@ -316,7 +316,6 @@ class ordered_set_base {
     }
 };
 
-#undef NULL_NODE
 }  // namespace cpdsa
 
 #endif /* CPDSA_ORDERED_SET_BASE */
