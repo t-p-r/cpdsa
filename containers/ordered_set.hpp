@@ -12,7 +12,7 @@ namespace cpdsa {
  *
  * @ingroup sequences
  *
- * @tparam _Tp Type of element. Must be discrete (i.e. ```is_integral<_Tp>```
+ * @tparam _Tp Type of element. Must be discrete (i.e. ```std::integral<_Tp>```
  * must holds true).
  * @tparam LB The smallest value allowed to be added.
  * @tparam RB One past the largest value allowed to be added.
@@ -21,7 +21,7 @@ namespace cpdsa {
  * have time complexity ```O(log(X))``` where ```X = RB - LB```. @c LB and @c RB
  * should be changed to suit specific needs (i.e. if @c _Tp is ```long long```).
  */
-template <typename _Tp, _Tp LB = INT_MIN, _Tp RB = INT_MAX>
+template <std::integral _Tp, _Tp LB = INT_MIN, _Tp RB = INT_MAX>
 class ordered_set : private ordered_set_base<_Tp, LB, RB> {
    private:
     using Base = ordered_set_base<_Tp, LB, RB>;

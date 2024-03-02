@@ -6,13 +6,14 @@
 #define CPDSA_ORDERED_SET_BASE
 
 namespace cpdsa {
+
 /**
  * @brief Background implementation for ordered_set.
  *
  * @note Use hassle-free ```std::shared_ptr<>``` for ease of maintaining and
  * expanding.
  */
-template <typename _Tp, _Tp LB, _Tp RB>
+template <std::integral _Tp, _Tp LB, _Tp RB>
 class ordered_set_base {
    private:
     static const int NULL_NODE_COUNT = 0;
@@ -75,10 +76,7 @@ class ordered_set_base {
 
     std::shared_ptr<node> root;
 
-    ordered_set_base() {
-        static_assert(std::is_integral<_Tp>());
-        root = std::shared_ptr<node>(new node());
-    }
+    ordered_set_base() { root = std::shared_ptr<node>(new node()); }
 
     /**
      * @brief Creates a new node and attaches it to the parent node ```id``` in
@@ -187,7 +185,11 @@ class ordered_set_base {
      * ```update_from_childs```.
      *
      */
-    void update(node& id, const _Tp& l, const _Tp& r, const _Tp& val, int action) {
+    void update(node& id,
+                const _Tp& l,
+                const _Tp& r,
+                const _Tp& val,
+                int action) {
         if (l == r) {
             update_leaf(id, val, action);
             return;
@@ -216,7 +218,11 @@ class ordered_set_base {
      * @param u Left boundary of the query range.
      * @param v Right boundary of the query range.
      */
-    [[nodiscard]] constexpr _Tp get(node& id, const _Tp& l, const _Tp& r, _Tp u, _Tp v) const {
+    [[nodiscard]] constexpr _Tp get(node& id,
+                                    const _Tp& l,
+                                    const _Tp& r,
+                                    _Tp u,
+                                    _Tp v) const {
         if (id.out_of_bound(u, v))
             return NULL_NODE_SUM;
         if (id.contained_by(u, v))
@@ -243,7 +249,10 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] constexpr _Tp k_largest(node& id, const _Tp& l, const _Tp& r, int k) const {
+    [[nodiscard]] constexpr _Tp k_largest(node& id,
+                                          const _Tp& l,
+                                          const _Tp& r,
+                                          int k) const {
         if (l == r)
             return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
 
@@ -269,7 +278,10 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] constexpr _Tp lower_bound(node& id, const _Tp& l, const _Tp& r, const _Tp& val) const {
+    [[nodiscard]] constexpr _Tp lower_bound(node& id,
+                                            const _Tp& l,
+                                            const _Tp& r,
+                                            const _Tp& val) const {
         if (l == r)
             return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
 
@@ -293,7 +305,10 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] constexpr _Tp upper_bound(node& id, const _Tp& l, const _Tp& r, const _Tp& val) const {
+    [[nodiscard]] constexpr _Tp upper_bound(node& id,
+                                            const _Tp& l,
+                                            const _Tp& r,
+                                            const _Tp& val) const {
         if (l == r)
             return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
 
