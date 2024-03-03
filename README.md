@@ -38,7 +38,7 @@ The full `clang-format` style is:
   - `ordered_set` - dynamic segment tree to manage discrete values.
 
 - Experimental:
-  - `buffer_input` - a fast (50-75% more than `std::cin`) way to read integral types (`int`,`size_t`, ...) from `stdin` (experimental).
+  - `buffer_scan` - a fast (50-75% more than `std::cin`) way to read integral types (`int`,`size_t`, ...) from `stdin` (experimental).
 - In progess:
    - `bigint` - arbitrary-precision arithmetic.
    - `graph` and `weighted_graph` - graph representation.
