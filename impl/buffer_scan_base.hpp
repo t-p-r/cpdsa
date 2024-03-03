@@ -1,5 +1,6 @@
 // Direct input from buffer, base implementation -*- C++ -*-
 
+#include <ctype.h>
 #include <stdio.h>
 #include <concepts>
 
@@ -34,8 +35,8 @@ char getc() noexcept {
  */
 template <std::integral _Tp>
 [[nodiscard]] constexpr _Tp getd() noexcept {
-    bool is_negative = false;
-    char next_char;
+    char is_negative = false;
+    int next_char;
     while (!isdigit(next_char = getc()) && next_char != '-')
         ;
     if (next_char == '-')
