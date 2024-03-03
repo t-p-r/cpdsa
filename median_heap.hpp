@@ -3,10 +3,16 @@
 #ifndef CPDSA_MEDIAN_HEAP
 #define CPDSA_MEDIAN_HEAP
 
+#include <concepts>
 #include <queue>
 #include <vector>
 
 namespace cpdsa {
+
+template <typename _Tp>
+concept Median_heap_element_type =
+    std::three_way_comparable<_Tp> && std::convertible_to<_Tp, double>;
+
 /**
  * @brief A standard container automatically maintaining its median.
  *
@@ -26,7 +32,7 @@ namespace cpdsa {
  * largest element) is either the largest element in @c lower_heap or
  * the smallest element in @c higher_heap,
  */
-template <typename _Tp>
+template <Median_heap_element_type _Tp>
 struct median_heap {
    private:
     std::priority_queue<_Tp> lower_heap;

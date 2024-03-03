@@ -12,7 +12,9 @@ This is a translation of [my personal archive](https://github.com/t-p-r/CS_archi
 
 After cloning the repository, you may want to precompile the master header `cpdsa.hpp`; in which case, do note that all compilation flags (e.g `-O2`, `-DONLINE_JUDGE` or `-pipe`) should be the same between the header and the final program.
 
-To use, simply `#include "<path_to_CPDSA>/cpdsa.hpp"`.
+To use, simply `#include "<path_to_CPDSA>/cpdsa.hpp"`. 
+
+If you feel daring, also `#include "<path_to_CPDSA>/cpdsa_experimental.hpp"`.
 
 ## Reliability
 
@@ -31,12 +33,14 @@ The full `clang-format` style is:
 
 ## Content
 
-- `median_heap` - a container maintaining its median.
-- `ordered_set` - dynamic segment tree to manage discrete values.
-- `buffer_input` - a fast (50-75% more than `std::cin`) way to read integral types (`int`,`size_t`,...) from `stdin` (experimental).
+- Completed:
+  - `median_heap` - a container maintaining its median.
+  - `ordered_set` - dynamic segment tree to manage discrete values.
+
+- Experimental:
+  - `buffer_input` - a fast (50-75% more than `std::cin`) way to read integral types (`int`,`size_t`, ...) from `stdin` (experimental).
 - In progess:
    - `bigint` - arbitrary-precision arithmetic.
-   - `graph` - graph representation.
-   - `tree` - tree representation.
-   - `weighted_graph` and `weighted_tree` - weighted variants of the structures described above.
+   - `graph` and `weighted_graph` - graph representation.
+   - `tree` and `weighted_tree` - tree representation.
    - `graph_algorithms` and `tree_algorithms` - do what you think it does.
