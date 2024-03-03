@@ -19,9 +19,9 @@ namespace cpdsa {
  * bundles a static array of 65536 chars. Embedded devices may not like this.
  */
 template <std::integral _Tp, std::integral... _Tps>
-constexpr void buffer_scan(_Tp& n, _Tps&... args) noexcept {
-    n = getd<_Tp>();
-    buffer_scan(args...);
+constexpr void buffer_scan(_Tp& first_arg, _Tps&... rest_args) noexcept {
+    first_arg = getd<_Tp>();
+    buffer_scan(rest_args...);
 }
 
 }  // namespace cpdsa

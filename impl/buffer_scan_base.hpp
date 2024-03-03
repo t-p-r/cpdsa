@@ -13,7 +13,7 @@ namespace cpdsa {
  *
  * @return Either the result or `EOF`.
  */
-char getc() noexcept {
+[[nodiscard]] char getc() noexcept {
     static const size_t BUFSIZE = 1 << 16;
     static char buf[BUFSIZE];
     static size_t bufat = 0, bufend = 0;
