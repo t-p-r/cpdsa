@@ -6,13 +6,13 @@ This is a translation of [my personal archive](https://github.com/t-p-r/CS_archi
 
 ## Prerequisites
 
-- A C++ compiler (preferably GNU GCC 9.2.0+) set to compile in C++20 (```-std=c++20```) or newer standards.
+- A C++ compiler (preferably GNU GCC 9.2.0+) set to compile in C++20 (`-std=c++20`) or newer standards.
 
 ## Uses
 
-After cloning the repository, you may want to precompile the master header ```cpdsa.hpp```; in which case, do note that all compilation flags (e.g ```-O2```, ```-DONLINE_JUDGE``` or ```-pipe```) should be the same between the header and the final program.
+After cloning the repository, you may want to precompile the master header `cpdsa.hpp`; in which case, do note that all compilation flags (e.g `-O2`, `-DONLINE_JUDGE` or `-pipe`) should be the same between the header and the final program.
 
-To use, simply ```#include "<path_to_CPDSA>/cpdsa.hpp"```.
+To use, simply `#include "<path_to_CPDSA>/cpdsa.hpp"`.
 
 ## Reliability
 
@@ -21,23 +21,22 @@ Headers has been self-tested on [asimon](https://github.com/t-p-r/asimon) and te
 ## Styles
 
 A very simple coding style is used. Naming conventions are mostly the same with the GNU C++ library.
-Line width is at most 80 characters. Indentation is done using four spaces (and not ```Tab```).
+Line width is at most 80 characters. Indentation is done using four spaces (and not `Tab`).
 
-The full ```clang-format``` style is:
+The full `clang-format` style is:
 
-```js
+`js
 { BasedOnStyle: Chromium, UseTab: Never, IndentWidth: 4, AllowShortIfStatementsOnASingleLine: true, ColumnLimit: 80 }
-```
+`
 
 ## Content
 
-1. Containers (standalone data structures):
-   - ```median_heap``` - a container maintaining its median.
-   - ```ordered_set``` - dynamic segment tree to manage discrete values.
-   - ```bigint``` - arbitrary-precision arithmetic (in progress).
-2. Graph (entire section in progress):
-   - ```graph``` - graph representation (in progress).
-   - ```tree``` - tree representation, child class of ```class``` (in progress).
-   - ```weighted_graph``` and ```weighted_tree``` - weighted variants of the structures described above.
-   - ```graph_algorithms``` - implements most popular algorithms on graphs (i.e. Dijkstra's).
-   - ```tree_algorithms``` - implements most popular algorithms on trees (i.e. Kruskal's).
+- `median_heap` - a container maintaining its median.
+- `ordered_set` - dynamic segment tree to manage discrete values.
+- `buffer_input` - read integral types (`int`,`size_t`,...) from stdin.
+- In progess:
+   - `bigint` - arbitrary-precision arithmetic.
+   - `graph` - graph representation.
+   - `tree` - tree representation.
+   - `weighted_graph` and `weighted_tree` - weighted variants of the structures described above.
+   - `graph_algorithms` and `tree_algorithms` - do what you think it does.

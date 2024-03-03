@@ -1,6 +1,7 @@
-// Ordered set implementation -*- C++ -*-
+// Ordered set -*- C++ -*-
+
 #include <climits>  // for INT_MIN and INT_MAX
-#include "./impl/ordered_set_base.hpp"
+#include "impl/ordered_set_base.hpp"
 
 #ifndef CPDSA_ORDERED_SET
 #define CPDSA_ORDERED_SET
@@ -12,14 +13,14 @@ namespace cpdsa {
  *
  * @ingroup sequences
  *
- * @tparam _Tp Type of element. Must be discrete (i.e. ```std::integral<_Tp>```
+ * @tparam _Tp Type of element. Must be discrete (i.e. `std::integral<_Tp>`
  * must holds true).
  * @tparam LB The smallest value allowed to be added.
  * @tparam RB One past the largest value allowed to be added.
  *
  * @note An implementation of a dynamic segment tree. Operations
- * have time complexity ```O(log(X))``` where ```X = RB - LB```. @c LB and @c RB
- * should be changed to suit specific needs (i.e. if @c _Tp is ```long long```).
+ * have time complexity `O(log(X))` where `X = RB - LB`. @c LB and @c RB
+ * should be changed to suit specific needs (i.e. if @c _Tp is `long long`).
  */
 template <std::integral _Tp, _Tp LB = INT_MIN, _Tp RB = INT_MAX>
 class ordered_set : private ordered_set_base<_Tp, LB, RB> {
@@ -59,7 +60,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
     }
 
     /**
-     * @brief Remove one occurence of ```val``` from the
+     * @brief Remove one occurence of `val` from the
      * container.
      *
      * @param val Value to be removed.
@@ -69,7 +70,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
     }
 
     /**
-     * @brief Remove all occurences of ```val``` from the container.
+     * @brief Remove all occurences of `val` from the container.
      *
      * @param val Value to be removed.
      */
@@ -83,7 +84,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
     void clear() { this = new ordered_set(); }
 
     /**
-     * @brief Returns the number of elements in the range ```[l,r]```.
+     * @brief Returns the number of elements in the range `[l,r]`.
      *
      */
     [[nodiscard]] constexpr int count(_Tp l, _Tp r) const noexcept {

@@ -1,4 +1,5 @@
-// Ordered set implementation -*- C++ -*-
+// Ordered set, base implementation -*- C++ -*-
+
 #include <memory>   // for std::shared_ptr
 #include <numeric>  // for std::midpoint
 
@@ -10,11 +11,17 @@ namespace cpdsa {
 /**
  * @brief Background implementation for ordered_set.
  *
- * @note Use hassle-free ```std::shared_ptr<>``` for ease of maintaining and
+ * @note Use hassle-free `std::shared_ptr<>` for ease of maintaining and
  * expanding.
  */
 template <std::integral _Tp, _Tp LB, _Tp RB>
 class ordered_set_base {
+    // TODO:
+    // - encapsulate the first four field of node in a class and provide getter
+    // funcs for them
+    // - provide iterator behaviour (Q: should end() return NULL_NODE?)
+    // - move most function described here to
+    // cpdsa::dynamic_segment_tree<_Tp,...>
    private:
     static const int NULL_NODE_COUNT = 0;
     static const int NULL_NODE_SUM = 0;
@@ -50,7 +57,7 @@ class ordered_set_base {
         /**
          * @brief Returns whether the current node doesn't overlap with the
          * range
-         * ```[u,v]```
+         * `[u,v]`
          */
         bool out_of_bound(_Tp u, _Tp v) const noexcept {
             return (highest_value < u || v < lowest_value);
@@ -59,7 +66,7 @@ class ordered_set_base {
         /**
          * @brief Returns whether the current node is completely within the
          * range
-         * ```[u,v]```
+         * `[u,v]`
          */
         bool contained_by(_Tp u, _Tp v) const noexcept {
             return (u <= lowest_value && lowest_value <= v);
@@ -79,7 +86,7 @@ class ordered_set_base {
     ordered_set_base() { root = std::shared_ptr<node>(new node()); }
 
     /**
-     * @brief Creates a new node and attaches it to the parent node ```id``` in
+     * @brief Creates a new node and attaches it to the parent node `id` in
      * the given direction.
      *
      * @param id The parent node.
@@ -182,7 +189,7 @@ class ordered_set_base {
      *
      * @note In effect, the value of the leaf node containing @c val will have
      * its values modifies first, followed by its ancestor nodes through
-     * ```update_from_childs```.
+     * `update_from_childs`.
      *
      */
     void update(node& id,
