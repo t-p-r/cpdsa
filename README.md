@@ -33,7 +33,7 @@ The full `clang-format` style is:
 
 - `median_heap` - a container maintaining its median.
 - `ordered_set` - dynamic segment tree to manage discrete values.
-- `buffer_input` - read integral types (`int`,`size_t`,...) from stdin (experimental).
+- `buffer_input` - a faster (50-75%) way to read integral types (`int`,`size_t`,...) from stdin (experimental).
 - In progess:
    - `bigint` - arbitrary-precision arithmetic.
    - `graph` - graph representation.
