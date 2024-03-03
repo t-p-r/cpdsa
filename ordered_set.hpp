@@ -1,6 +1,6 @@
 // Ordered set -*- C++ -*-
 
-#include <climits>  // for INT_MIN and INT_MAX
+#include <limits>
 #include "impl/ordered_set_base.hpp"
 
 #ifndef CPDSA_ORDERED_SET
@@ -20,9 +20,11 @@ namespace cpdsa {
  *
  * @note An implementation of a dynamic segment tree. Operations
  * have time complexity `O(log(X))` where `X = RB - LB`. @c LB and @c RB
- * should be changed to suit specific needs (i.e. if @c _Tp is `long long`).
+ * must be specified if `std::numeric_limits<_Tp>` is not provided.
  */
-template <std::integral _Tp, _Tp LB = INT_MIN, _Tp RB = INT_MAX>
+template <std::integral _Tp,
+          _Tp LB = std::numeric_limits<_Tp>::min(),
+          _Tp RB = std::numeric_limits<_Tp>::max()>
 class ordered_set : private ordered_set_base<_Tp, LB, RB> {
    private:
     using Base = ordered_set_base<_Tp, LB, RB>;
