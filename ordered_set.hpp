@@ -1,10 +1,10 @@
 // Ordered set -*- C++ -*-
 
-#include <limits>
-#include "impl/ordered_set_base.hpp"
-
 #ifndef CPDSA_ORDERED_SET
 #define CPDSA_ORDERED_SET
+
+#include <limits>
+#include "impl/ordered_set_base.hpp"
 
 namespace cpdsa {
 /**

@@ -1,9 +1,9 @@
 // Direct input from buffer -*- C++ -*-
 
-#include "impl/buffer_scan_base.hpp"
-
 #ifndef CPDSA_BUFFER_INPUT
 #define CPDSA_BUFFER_INPUT
+
+#include "impl/buffer_scan_base.hpp"
 
 namespace cpdsa {
 

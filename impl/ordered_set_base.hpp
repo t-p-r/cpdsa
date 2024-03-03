@@ -1,10 +1,10 @@
 // Ordered set, base implementation -*- C++ -*-
 
-#include <memory>   // for std::shared_ptr
-#include <numeric>  // for std::midpoint
-
 #ifndef CPDSA_ORDERED_SET_BASE
 #define CPDSA_ORDERED_SET_BASE
+
+#include <memory>   // for std::shared_ptr
+#include <numeric>  // for std::midpoint
 
 namespace cpdsa {
 

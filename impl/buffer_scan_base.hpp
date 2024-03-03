@@ -1,11 +1,11 @@
 // Direct input from buffer, base implementation -*- C++ -*-
 
-#include <ctype.h>
-#include <stdio.h>
-#include <concepts>
-
 #ifndef CPDSA_BUFFER_INPUT_BASE
 #define CPDSA_BUFFER_INPUT_BASE
+
+#include <ctype.h>   // for size_t
+#include <stdio.h>   // for fread
+#include <concepts>  // for std::integral
 
 namespace cpdsa {
 /**
@@ -29,9 +29,9 @@ char getc() noexcept {
  *
  * @return Return said number or 0 if no number is found.
  *
- * @note First skips non-digit characters except `-`. If `-` is received
+ * @note First skips non-digit characters except `-`. If `-` is reached
  * first then number is considered negative. Stops upon reaching any non-digit
- * character. Will cause overflow if too much digit has been readed.
+ * character. Will most likely cause overflow if too much digit has been readed.
  */
 template <std::integral _Tp>
 [[nodiscard]] constexpr _Tp getd() noexcept {
