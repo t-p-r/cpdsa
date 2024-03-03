@@ -1,1 +1,1 @@
-These uses [asimon](https://github.com/t-p-r/asimon) to test.
+These uses [asimon](https://github.com/t-p-r/asimon) to test. See documentation on that side.
