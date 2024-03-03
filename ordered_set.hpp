@@ -107,8 +107,8 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      *
      * @return Either said value or RB if no such value exists.
      */
-    [[nodiscard]] constexpr _Tp find_by_order(const int& k) const noexcept {
-        if (static_cast<int>(size()) >= k)
+    [[nodiscard]] constexpr _Tp find_by_order(const size_t& k) const noexcept {
+        if (size() >= k)
             return Base::k_largest(*(this->root), LB, RB, k);
         else
             return RB;

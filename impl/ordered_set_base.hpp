@@ -236,7 +236,7 @@ class ordered_set_base {
             return id.cnt;
 
         _Tp mid = std::midpoint(l, r);
-        const _Tp& result = 0;
+        _Tp result = 0;
         if (id.left_child != NULL_NODE)
             result += get(*(id.left_child), l, mid, u, v);
         if (id.right_child != NULL_NODE)
@@ -259,7 +259,7 @@ class ordered_set_base {
     [[nodiscard]] constexpr _Tp k_largest(node& id,
                                           const _Tp& l,
                                           const _Tp& r,
-                                          int k) const {
+                                          size_t k) const {
         if (l == r)
             return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
 
