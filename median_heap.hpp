@@ -9,6 +9,11 @@
 
 namespace cpdsa {
 
+/**
+ * @brief Types eligible to be elements of `median_heap`.
+ *
+ * @note Must be convertible double because `median()` casted to that type.
+ */
 template <typename _Tp>
 concept Median_heap_element_type =
     std::three_way_comparable<_Tp> && std::convertible_to<_Tp, double>;
@@ -18,7 +23,7 @@ concept Median_heap_element_type =
  *
  *
  * @tparam _Tp Type of element.
- *
+ *1
  * @note The container employs two smaller containers @c lower_heap and
  * @c higher_heap, where the largest elements in @c lower_heap does not exceed
  * the smallest element in @c higher_heap, and the size of @c lower_heap is

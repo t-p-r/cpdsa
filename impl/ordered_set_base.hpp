@@ -16,12 +16,6 @@ namespace cpdsa {
  */
 template <std::integral _Tp, _Tp LB, _Tp RB>
 class ordered_set_base {
-    // TODO:
-    // - encapsulate the first four field of node in a class and provide getter
-    // funcs for them
-    // - provide iterator behaviour (Q: should end() return NULL_NODE?)
-    // - move most function described here to
-    // cpdsa::dynamic_segment_tree<_Tp,...>
    private:
     static const int NULL_NODE_COUNT = 0;
     static const int NULL_NODE_SUM = 0;
