@@ -3,7 +3,7 @@
 #ifndef CPDSA_ORDERED_SET_BASE
 #define CPDSA_ORDERED_SET_BASE
 
-#include <memory>   // for std::shared_ptr
+#include <memory>   // for std::unique_ptr
 #include <numeric>  // for std::midpoint
 
 namespace cpdsa {
@@ -11,7 +11,7 @@ namespace cpdsa {
 /**
  * @brief Background implementation for ordered_set.
  *
- * @note Use hassle-free `std::shared_ptr<>` for ease of maintaining and
+ * @note Use hassle-free `std::unique_ptr<>` for ease of maintaining and
  * expanding.
  */
 template <std::integral _Tp, _Tp LB, _Tp RB>
@@ -39,8 +39,8 @@ class ordered_set_base {
         _Tp highest_value;  // An uninstantiated or null node has
                             // lowest_value = RB and highest_value = LB as
                             // obvious placeholders.
-        std::shared_ptr<node> left_child;
-        std::shared_ptr<node> right_child;  // left and right child
+        std::unique_ptr<node> left_child;
+        std::unique_ptr<node> right_child;  // left and right child
 
         node()
             : cnt(EMPTY_NODE_COUNT),
@@ -73,9 +73,9 @@ class ordered_set_base {
     enum NODE_UPDATE_ACTIONS { ADD_ONCE, REMOVE_ONCE, REMOVE_ALL };
     enum NODE_DIRECTIONS { LEFT, RIGHT };
 
-    std::shared_ptr<node> root;
+    std::unique_ptr<node> root;
 
-    ordered_set_base() { root = std::shared_ptr<node>(new node()); }
+    ordered_set_base() { root = std::unique_ptr<node>(new node()); }
 
     /**
      * @brief Creates a new node and attaches it to the parent node `id` in
@@ -87,16 +87,16 @@ class ordered_set_base {
      */
     constexpr void create_node(node& id, bool dir) {
         if (dir == NODE_DIRECTIONS::LEFT)
-            id.left_child = std::shared_ptr<node>(new node());
+            id.left_child = std::unique_ptr<node>(new node());
         else
-            id.right_child = std::shared_ptr<node>(new node());
+            id.right_child = std::unique_ptr<node>(new node());
     }
 
     /**
      * @brief Wrapper function for cnt.
      */
     [[nodiscard]] constexpr _Tp get_cnt(
-        const std::shared_ptr<node>& id) const noexcept {
+        const std::unique_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_COUNT : id->cnt;
     }
 
@@ -104,7 +104,7 @@ class ordered_set_base {
      * @brief Wrapper function for sum.
      */
     [[nodiscard]] constexpr _Tp get_sum(
-        const std::shared_ptr<node>& id) const noexcept {
+        const std::unique_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_SUM : id->sum;
     }
 
@@ -112,7 +112,7 @@ class ordered_set_base {
      * @brief Wrapper function for lowest_value.
      */
     [[nodiscard]] constexpr _Tp get_lowest(
-        const std::shared_ptr<node>& id) const noexcept {
+        const std::unique_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_MIN : id->lowest_value;
     }
 
@@ -120,7 +120,7 @@ class ordered_set_base {
      * @brief Wrapper function for highest_value.
      */
     [[nodiscard]] constexpr _Tp get_highest(
-        const std::shared_ptr<node>& id) const noexcept {
+        const std::unique_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_MAX : id->highest_value;
     }
 
@@ -132,19 +132,20 @@ class ordered_set_base {
      * @param action Action specified (see @c NODE_UPDATE_ACTIONS)
      */
     constexpr void update_leaf(node& leaf, const _Tp& val, int action) {
-        if (leaf.cnt == 0 && (action == REMOVE_ONCE || action == REMOVE_ALL))
+        if (leaf.cnt == 0 && (action == NODE_UPDATE_ACTIONS::REMOVE_ONCE ||
+                              action == NODE_UPDATE_ACTIONS::REMOVE_ALL))
             return;
 
         switch (action) {
-            case ADD_ONCE:
+            case NODE_UPDATE_ACTIONS::ADD_ONCE:
                 leaf.cnt++;
                 leaf.sum += val;
                 break;
-            case REMOVE_ONCE:
+            case NODE_UPDATE_ACTIONS::REMOVE_ONCE:
                 leaf.cnt--;
                 leaf.sum -= val;
                 break;
-            case REMOVE_ALL:
+            case NODE_UPDATE_ACTIONS::REMOVE_ALL:
                 leaf.cnt = leaf.sum = 0;
                 break;
             default:

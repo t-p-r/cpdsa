@@ -58,7 +58,8 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be added.
      */
     constexpr void insert(const _Tp& val) {
-        Base::update(*(this->root), LB, RB, val, this->ADD_ONCE);
+        Base::update(*(this->root), LB, RB, val,
+                     Base::NODE_UPDATE_ACTIONS::ADD_ONCE);
     }
 
     /**
@@ -68,7 +69,8 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be removed.
      */
     constexpr void erase_once(const _Tp& val) {
-        Base::update(*(this->root), LB, RB, val, this->REMOVE_ONCE);
+        Base::update(*(this->root), LB, RB, val,
+                     Base::NODE_UPDATE_ACTIONS::REMOVE_ONCE);
     }
 
     /**
@@ -77,7 +79,8 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be removed.
      */
     constexpr void erase_all(const _Tp& val) {
-        Base::update(*(this->root), LB, RB, val, this->REMOVE_ALL);
+        Base::update(*(this->root), LB, RB, val,
+                     Base::NODE_UPDATE_ACTIONS::REMOVE_ALL);
     }
 
     /**
