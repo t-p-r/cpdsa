@@ -76,9 +76,7 @@ class ordered_set_base {
    protected:
     // these should have been an enum but
     // are also used by child classes so ...
-    static constexpr int ADD_ONCE = 0;
-    static constexpr int REMOVE_ONCE = 1;
-    static constexpr int REMOVE_ALL = 2;
+    enum NODE_UPDATE_ACTIONS { ADD_ONCE, REMOVE_ONCE, REMOVE_ALL };
     enum NODE_DIRECTIONS { LEFT, RIGHT };
 
     std::shared_ptr<node> root;
