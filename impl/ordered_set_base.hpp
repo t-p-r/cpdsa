@@ -16,7 +16,6 @@ namespace cpdsa {
  */
 template <std::integral _Tp, _Tp LB, _Tp RB>
 class ordered_set_base {
-    
    private:
     static const int NULL_NODE_COUNT = 0;
     static const int NULL_NODE_SUM = 0;
