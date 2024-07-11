@@ -36,11 +36,11 @@ namespace cpdsa {
 template <std::integral _Tp>
 [[nodiscard]] constexpr _Tp getd() noexcept {
     char is_negative = false;
-    int next_char;
-    while (!isdigit(next_char = getc()) && next_char != '-')
-        ;
-    if (next_char == '-')
-        is_negative = true, next_char = getc();
+    int next_char = 0;
+    while (!isdigit(next_char = getc()) && next_char != '-') {
+        if (next_char == EOF) return 0;
+    }
+    if (next_char == '-') is_negative = true, next_char = getc();
     _Tp unsigned_result = 0;
     for (; isdigit(next_char); next_char = getc())
         unsigned_result *= 10, unsigned_result += next_char - '0';
