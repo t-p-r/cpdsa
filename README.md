@@ -1,46 +1,37 @@
 # CPDSA - Data Structures and Algorithms for Competitive Programming
 
+## What is this?
+
 A C++ library containing well-known data structures and algorithms not found in the C++ STL. Aims to be fast (within the confines of the STL), readable, and extensible.
 
 This is a translation of [my personal archive](https://github.com/t-p-r/CS_archive) to standards found in modern C++ source codes.
 
 ## Prerequisites
 
-- A C++ compiler (preferably GNU GCC 9.2.0+) set to compile in C++20 (`-std=c++20`) or newer standards.
+- A C++ compiler (preferably GNU GCC 9.2+) set to compile in C++11 (`-std=c++11`) or newer standards. Some features are only supported by C++20.
 
 ## Uses
 
-After cloning the repository, you may want to precompile the master header `cpdsa.hpp`; in which case, do note that all compilation flags (e.g `-O2`, `-DONLINE_JUDGE` or `-pipe`) should be the same between the header and the final program.
+After cloning the repository, you may want to precompile the master header `cpdsa.hpp`; in which case, do note that the set of compilation options (e.g `-O2`, `-DONLINE_JUDGE` or `-pipe`) should be the same between this header and the final program.
 
 To use, simply `#include "<path_to_CPDSA>/cpdsa.hpp"`. 
 
-If you feel daring, also `#include "<path_to_CPDSA>/cpdsa_experimental.hpp"`.
+~~If you feel daring, also `#include "<path_to_CPDSA>/cpdsa_experimental.hpp"`.~~
 
 ## Reliability
 
-Headers has been self-tested on [asimon](https://github.com/t-p-r/asimon) and tested with problems found on online judges (e.g. Leetcode).
-
-## Styles
-
-A very simple coding style is used. Naming conventions are mostly the same with the GNU C++ library.
-Line width is at most 80 characters. Indentation is done using four spaces (and not `Tab`).
-
-The full `clang-format` style is:
-
-`js
-{ BasedOnStyle: Chromium, UseTab: Never, IndentWidth: 4, AllowShortIfStatementsOnASingleLine: true, ColumnLimit: 80 }
-`
+Features has been self-tested on [asimon](https://github.com/t-p-r/asimon) and tested with problems found on online judges (e.g. Leetcode).
 
 ## Content
 
 - Completed:
   - `median_heap` - a container maintaining its median.
   - `ordered_set` - dynamic segment tree to manage discrete values.
-
+  - `buffer_scan` - a fast (~2x faster than `std::cin`, ~3x for `scanf`) way to read integral types (`int`,`size_t`, ...) from `stdin`.
 - Experimental:
-  - `buffer_scan` - a fast (50-75% more than `std::cin`) way to read integral types (`int`,`size_t`, ...) from `stdin` (experimental).
+  
 - In progess:
    - `bigint` - arbitrary-precision arithmetic.
-   - `graph` and `weighted_graph` - graph representation.
-   - `tree` and `weighted_tree` - tree representation.
-   - `graph_algorithms` and `tree_algorithms` - do what you think it does.
+   - `graph` - graph representation.
+   - `tree` - tree representation.
+   - many types of string automatons (KMP, hash-based container, Aho-Corasick, ...)
