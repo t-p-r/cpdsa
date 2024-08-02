@@ -4,7 +4,7 @@
 #define CPDSA_ORDERED_SET
 
 #include <limits>
-#include "impl/ordered_set_base.hpp"
+#include "base/ordered_set_base.hpp"
 
 namespace cpdsa {
 /**

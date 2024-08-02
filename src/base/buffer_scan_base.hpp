@@ -1,0 +1,69 @@
+/** CPDSA: Direct input from buffer, base implementation -*- C++ -*-
+ * Other than a few C++ type checks this is essentially a C source file.
+ * That is why, for example, you will see size_t instead of std::size_t.
+ */
+
+/** @file src/base/buffer_scan_base.hpp */
+
+#ifndef CPDSA_BUFFER_SCAN_BASE
+#define CPDSA_BUFFER_SCAN_BASE
+
+#include <ctype.h>  // size_t
+#include <stdio.h>  // fread
+
+#if __cplusplus >= 202002L
+#include <concepts>  // std::integral (if possible)
+#elif __cplusplus >= 201103L
+#include <type_traits>  // backup: is_integral
+#endif
+
+namespace cpdsa {
+/**
+ * @brief Get the next 8 bits from stdin.
+ *
+ * @return Either the result or @a EOF.
+ */
+
+[[nodiscard]] char getc() noexcept {
+    static const size_t BUFSIZE = 1 << 16;
+    static char buf[BUFSIZE];
+    static size_t bufat = 0, bufend = 0;
+    if (bufat == bufend) {
+        bufend = fread(buf, sizeof(char), BUFSIZE, stdin);
+        bufat = 0;
+    }
+    return bufend ? buf[bufat++] : EOF;
+}
+
+/**
+ * @brief Get the next integral number from @c stdin.
+ *
+ * @return Return said number or 0 if no number is found.
+ *
+ * @note First skips non-digit characters except @a - and @a +. If @a - is
+ * reached first then the number is considered negative. After that,
+ * continuously reads characters until reaching any non-digit ones. Will most
+ * likely cause overflow if too much digit has been readed.
+ */
+template <typename _Tp>
+[[nodiscard]] _Tp getd() noexcept {
+    bool is_negative = false;
+    int next_char = 0;
+    while (!isdigit(next_char = getc()) && next_char != '-') {
+        if (next_char == EOF) return 0;
+    }
+    if (next_char == '-') is_negative = true, next_char = getc();
+    _Tp unsigned_result = 0;
+    for (; isdigit(next_char); next_char = getc())
+        unsigned_result = unsigned_result * 10 + next_char - '0';
+    return (is_negative ? -unsigned_result : unsigned_result);
+}
+
+/**
+ * @brief A function that does nothing (by design).
+ */
+void buffer_scan() {}
+
+}  // namespace cpdsa
+
+#endif /* CPDSA_BUFFER_SCAN_BASE */
