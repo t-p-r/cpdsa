@@ -1,0 +1,18 @@
+General status:
+
+solution              status
+--------------------  -------------------
+buffer_scan.cpp       accepted (32 tests)
+iostream.cpp          accepted (32 tests)
+iostream_vanilla.cpp  accepted (32 tests)
+stdio.c               accepted (32 tests)
+
+
+Execution time statistics:
+
+solution                min (ms)    max (ms)    average (ms)    median (ms)
+--------------------  ----------  ----------  --------------  -------------
+buffer_scan.cpp          22.2285     34.7162         24.6559        23.2431
+iostream.cpp             53.3894     91.0066          60.283        56.2562
+iostream_vanilla.cpp     209.098     228.158         212.893         212.28
+stdio.c                  72.3212     86.9111         75.1089        74.3109
