@@ -1,21 +1,15 @@
-/** CPDSA: Direct input from buffer, base implementation -*- C++ -*-
- * Other than a few C++ type checks this is essentially a C source file.
- * That is why, for example, you will see size_t instead of std::size_t.
+/**
+ * CPDSA: Direct input from buffer, base implementation -*- C++ -*-
+ * This is essentially a C source file.
+ *
+ * @file src/base/buffer_scan_base.hpp
  */
-
-/** @file src/base/buffer_scan_base.hpp */
 
 #ifndef CPDSA_BUFFER_SCAN_BASE
 #define CPDSA_BUFFER_SCAN_BASE
 
-#include <ctype.h>  // size_t
-#include <stdio.h>  // fread
-
-#if __cplusplus >= 202002L
-#include <concepts>  // std::integral (if possible)
-#elif __cplusplus >= 201103L
-#include <type_traits>  // backup: is_integral
-#endif
+#include <stddef.h>  // size_t
+#include <stdio.h>   // fread
 
 namespace cpdsa {
 /**

@@ -1,9 +1,14 @@
-// Ordered set -*- C++ -*-
+/**
+ * CPDSA: Ordered set -*- C++ -*-
+ * 
+ * @file src/ordered_set.hpp
+ */
 
 #ifndef CPDSA_ORDERED_SET
 #define CPDSA_ORDERED_SET
 
 #include <limits>
+
 #include "base/ordered_set_base.hpp"
 
 namespace cpdsa {
@@ -11,23 +16,20 @@ namespace cpdsa {
  * @brief A container allowing for operations on discrete values in logarithmic
  * time.
  *
- * @ingroup sequences
- *
- * @tparam _Tp Type of element. Must be discrete (i.e. `std::integral<_Tp>`
+ * @tparam _Tp Type of element. Must be discrete (i.e. @c std::integral<_Tp>
  * must holds true).
  * @tparam LB The smallest value allowed to be added.
  * @tparam RB One past the largest value allowed to be added.
  *
  * @note An implementation of a dynamic segment tree. Operations
- * have time complexity `O(log(X))` where `X = RB - LB`. @c LB and @c RB
- * must be specified if `std::numeric_limits<_Tp>` is not provided.
+ * have time complexity @a O(log(X)) where @a X = @a RB - @a LB. @a LB and @a RB
+ * must be specified if @c std::numeric_limits<_Tp> is not provided.
  */
-template <std::integral _Tp,
-          _Tp LB = std::numeric_limits<_Tp>::min(),
+template <std::integral _Tp, _Tp LB = std::numeric_limits<_Tp>::min(),
           _Tp RB = std::numeric_limits<_Tp>::max()>
 class ordered_set : private ordered_set_base<_Tp, LB, RB> {
    private:
-    using Base = ordered_set_base<_Tp, LB, RB>;
+    using Base_type = ordered_set_base<_Tp, LB, RB>;
 
    public:
     /**
@@ -58,8 +60,8 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be added.
      */
     constexpr void insert(const _Tp& val) {
-        Base::update(*(this->root), LB, RB, val,
-                     Base::NODE_UPDATE_ACTIONS::ADD_ONCE);
+        Base_type::update(*(this->root), LB, RB, val,
+                          Base_type::NODE_UPDATE_ACTIONS::ADD_ONCE);
     }
 
     /**
@@ -69,8 +71,8 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be removed.
      */
     constexpr void erase_once(const _Tp& val) {
-        Base::update(*(this->root), LB, RB, val,
-                     Base::NODE_UPDATE_ACTIONS::REMOVE_ONCE);
+        Base_type::update(*(this->root), LB, RB, val,
+                          Base_type::NODE_UPDATE_ACTIONS::REMOVE_ONCE);
     }
 
     /**
@@ -79,8 +81,8 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @param val Value to be removed.
      */
     constexpr void erase_all(const _Tp& val) {
-        Base::update(*(this->root), LB, RB, val,
-                     Base::NODE_UPDATE_ACTIONS::REMOVE_ALL);
+        Base_type::update(*(this->root), LB, RB, val,
+                          Base_type::NODE_UPDATE_ACTIONS::REMOVE_ALL);
     }
 
     /**
@@ -93,14 +95,14 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      *
      */
     [[nodiscard]] constexpr int count(_Tp l, _Tp r) const noexcept {
-        return Base::get(*(this->root), LB, RB, l, r);
+        return Base_type::get(*(this->root), LB, RB, l, r);
     }
 
     /**
      * @brief Returns the number of elements less than or equal to @c val.
      */
     [[nodiscard]] constexpr int order_of_key(const _Tp& val) const noexcept {
-        return Base::get(*(this->root), LB, RB, LB, val);
+        return Base_type::get(*(this->root), LB, RB, LB, val);
     }
 
     /**
@@ -112,7 +114,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      */
     [[nodiscard]] constexpr _Tp find_by_order(const size_t& k) const noexcept {
         if (size() >= k)
-            return Base::k_largest(*(this->root), LB, RB, k);
+            return Base_type::k_largest(*(this->root), LB, RB, k);
         else
             return RB;
     }
@@ -123,7 +125,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp lower_bound(const _Tp& val) const noexcept {
-        return Base::lower_bound(*(this->root), LB, RB, val);
+        return Base_type::lower_bound(*(this->root), LB, RB, val);
     }
 
     /**
@@ -132,7 +134,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
      * @return Either said value or RB if no such value exists.
      */
     [[nodiscard]] constexpr _Tp upper_bound(const _Tp& val) const noexcept {
-        return Base::upper_bound(*(this->root), LB, RB, val);
+        return Base_type::upper_bound(*(this->root), LB, RB, val);
     }
 };
 }  // namespace cpdsa

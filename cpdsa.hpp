@@ -1,6 +1,8 @@
-// CPDSA: Includes for precompiling -*- C++ -*-
-
-/** @file cpdsa.hpp */
+/** 
+ * CPDSA: Includes for precompiling -*- C++ -*-
+ * 
+ * @file cpdsa.hpp
+ */
 
 #if __cplusplus >= 202002L
 #include "src/ordered_set.hpp"

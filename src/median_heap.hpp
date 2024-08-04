@@ -1,6 +1,8 @@
-// CPDSA: Median heap implementation -*- C++ -*-
-
-/** @file src/median_heap.hpp */
+/** 
+ * CPDSA: Median heap implementation -*- C++ -*-
+ * 
+ * @file src/median_heap.hpp 
+ */
 
 #ifndef CPDSA_MEDIAN_HEAP
 #define CPDSA_MEDIAN_HEAP
@@ -48,9 +50,10 @@ template <typename _Tp>
 #endif
 class median_heap {
    private:
-#if __cplusplus < 202002L
+#if __cplusplus < 202002L // C++11/14/17
     static_assert(std::is_convertible<_Tp, double>::value,
                   "median heap element must be convertible to double");
+    // TODO: assert <=>
 #endif
 
     std::priority_queue<_Tp> lower_heap;

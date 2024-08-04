@@ -1,9 +1,10 @@
-/** CPDSA: Direct input from buffer -*- C++ -*-
+/** 
+ * CPDSA: Direct input from buffer -*- C++ -*-
  * Other than a few C++ type checks this is essentially a C source file.
  * That is why, for example, you will see size_t instead of std::size_t.
+ *
+ * @file src/buffer_scan.hpp
  */
-
-/** @file src/buffer_scan.hpp */
 
 #ifndef CPDSA_BUFFER_SCAN
 #define CPDSA_BUFFER_SCAN
