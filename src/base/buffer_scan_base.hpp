@@ -12,13 +12,15 @@
 #include <stdio.h>   // fread
 
 namespace cpdsa {
-/**
- * @brief Get the next 8 bits from stdin.
- *
- * @return Either the result or @a EOF.
- */
 
+/**
+ * @brief Get the next 8 bytes from stdin, or return @a EOF if stdin is
+ * empty.
+ *
+ * @note Use @c fread() to perform efficient bulk reading.
+ */
 [[nodiscard]] char getc() noexcept {
+    // testing shows that 64 KB is a sweet spot
     static const size_t BUFSIZE = 1 << 16;
     static char buf[BUFSIZE];
     static size_t bufat = 0, bufend = 0;
@@ -32,7 +34,7 @@ namespace cpdsa {
 /**
  * @brief Get the next integral number from @c stdin.
  *
- * @return Return said number or 0 if no number is found.
+ * @return Return said number or @a 0 if no number is found.
  *
  * @note First skips non-digit characters except @a - and @a +. If @a - is
  * reached first then the number is considered negative. After that,
