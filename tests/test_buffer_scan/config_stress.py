@@ -9,7 +9,7 @@ if problem_name == "$workspace":
         "iostream_vanilla.cpp",
     ]
     checker = "token"
-    custom_checker = ""
+    external_checker = ""
 
 testgen_script = "testgen 1000000 1000000000"
 testlib_persistent = False
