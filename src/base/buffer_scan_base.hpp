@@ -51,7 +51,7 @@ template <typename _Tp>
     if (next_char == '-') is_negative = true, next_char = getc();
     _Tp unsigned_result = 0;
     for (; isdigit(next_char); next_char = getc())
-        unsigned_result = unsigned_result * 10 + next_char - '0';
+        unsigned_result = unsigned_result * 10 + next_char - '0';  // compiler will figure this one out
     return (is_negative ? -unsigned_result : unsigned_result);
 }
 
