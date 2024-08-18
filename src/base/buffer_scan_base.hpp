@@ -19,7 +19,7 @@ namespace cpdsa {
  *
  * @note Use @c fread() to perform efficient bulk reading.
  */
-[[nodiscard]] char getc() noexcept {
+[[nodiscard]] char __getc() noexcept {
     // testing shows that 64 KB is a sweet spot
     static const size_t BUFSIZE = 1 << 16;
     static char buf[BUFSIZE];
@@ -45,12 +45,12 @@ template <typename _Tp>
 [[nodiscard]] _Tp getd() noexcept {
     bool is_negative = false;
     int next_char = 0;
-    while (!isdigit(next_char = getc()) && next_char != '-') {
+    while (!isdigit(next_char = __getc()) && next_char != '-') {
         if (next_char == EOF) return 0;
     }
-    if (next_char == '-') is_negative = true, next_char = getc();
+    if (next_char == '-') is_negative = true, next_char = __getc();
     _Tp unsigned_result = 0;
-    for (; isdigit(next_char); next_char = getc())
+    for (; isdigit(next_char); next_char = __getc())
         unsigned_result = unsigned_result * 10 + next_char - '0';  // compiler will figure this one out
     return (is_negative ? -unsigned_result : unsigned_result);
 }

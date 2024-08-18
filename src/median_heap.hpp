@@ -1,13 +1,18 @@
-/** 
+/**
  * CPDSA: Median heap implementation -*- C++ -*-
- * 
- * @file src/median_heap.hpp 
+ *
+ * @file src/median_heap.hpp
  */
 
 #ifndef CPDSA_MEDIAN_HEAP
 #define CPDSA_MEDIAN_HEAP
 
+#if __cplusplus >= 202002L
 #include <concepts>
+#else
+#include <type_traits>
+#endif
+
 #include <queue>
 
 namespace cpdsa {
@@ -19,8 +24,7 @@ namespace cpdsa {
  */
 #if __cplusplus >= 202002L
 template <typename _Tp>
-concept Median_heap_element_type =
-    std::three_way_comparable<_Tp> && std::convertible_to<_Tp, double>;
+concept Median_heap_element_type = std::three_way_comparable<_Tp> && std::convertible_to<_Tp, double>;
 #endif
 
 /**
@@ -50,15 +54,17 @@ template <typename _Tp>
 #endif
 class median_heap {
    private:
-#if __cplusplus < 202002L // C++11/14/17
-    static_assert(std::is_convertible<_Tp, double>::value,
-                  "median heap element must be convertible to double");
+#if __cplusplus < 202002L  // C++11/14/17
+    static_assert(std::is_convertible<_Tp, double>::value, "median heap element must be convertible to double");
     // TODO: assert <=>
 #endif
 
     std::priority_queue<_Tp> lower_heap;
     std::priority_queue<_Tp, std::vector<_Tp>, std::greater<_Tp>> higher_heap;
 
+    /**
+     * @brief Maintain the size difference between the heaps.
+     */
     void balance() {
         if (higher_heap.size() - 1 > lower_heap.size()) {
             lower_heap.push(higher_heap.top());
@@ -112,16 +118,12 @@ class median_heap {
     /**
      *  @return The number of elements in the container.
      */
-    [[nodiscard]] const std::size_t size() const {
-        return lower_heap.size() + higher_heap.size();
-    }
+    [[nodiscard]] const std::size_t size() const { return lower_heap.size() + higher_heap.size(); }
 
     /**
      *  @return @a true if the container is empty.
      */
-    [[nodiscard]] const bool empty() const {
-        return lower_heap.empty() && higher_heap.empty();
-    }
+    [[nodiscard]] const bool empty() const { return lower_heap.empty() && higher_heap.empty(); }
 
     /**
      * @return The discrete median (with a container of size @a n, its
@@ -136,8 +138,7 @@ class median_heap {
      *  @return The median of the container.
      */
     [[nodiscard]] const double median() const {
-        if (lower_heap.size() == higher_heap.size())
-            return 1.0 * (lower_heap.top() + higher_heap.top()) / 2;
+        if (lower_heap.size() == higher_heap.size()) return 1.0 * (lower_heap.top() + higher_heap.top()) / 2;
         return higher_heap.top();
     }
 };
