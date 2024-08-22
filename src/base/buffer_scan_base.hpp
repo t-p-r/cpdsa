@@ -8,6 +8,7 @@
 #ifndef CPDSA_BUFFER_SCAN_BASE
 #define CPDSA_BUFFER_SCAN_BASE
 
+#include <ctype.h>   // isdigit
 #include <stddef.h>  // size_t
 #include <stdio.h>   // fread
 
