@@ -43,39 +43,32 @@ class ordered_set_base {
         std::unique_ptr<node> right_child;  // left and right child
 
         node()
-            : cnt(EMPTY_NODE_COUNT),
-              sum(EMPTY_NODE_SUM),
-              lowest_value(EMPTY_NODE_MIN),
-              highest_value(EMPTY_NODE_MAX) {}
+            : cnt(EMPTY_NODE_COUNT), sum(EMPTY_NODE_SUM), lowest_value(EMPTY_NODE_MIN), highest_value(EMPTY_NODE_MAX) {}
 
         /**
          * @brief Returns whether the current node doesn't overlap with the
          * range
          * `[u,v]`
          */
-        bool out_of_bound(_Tp u, _Tp v) const noexcept {
-            return (highest_value < u || v < lowest_value);
-        }
+        bool out_of_bound(_Tp u, _Tp v) const noexcept { return (highest_value < u || v < lowest_value); }
 
         /**
          * @brief Returns whether the current node is completely within the
          * range
          * `[u,v]`
          */
-        bool contained_by(_Tp u, _Tp v) const noexcept {
-            return (u <= lowest_value && lowest_value <= v);
-        }
+        bool contained_by(_Tp u, _Tp v) const noexcept { return (u <= lowest_value && lowest_value <= v); }
     };
 
    protected:
-    // these should have been an enum but
+    // these should have been a simple enum but
     // are also used by child classes so ...
     enum NODE_UPDATE_ACTIONS { ADD_ONCE, REMOVE_ONCE, REMOVE_ALL };
     enum NODE_DIRECTIONS { LEFT, RIGHT };
 
-    std::unique_ptr<node> root;
+    node root;
 
-    ordered_set_base() { root = std::unique_ptr<node>(new node()); }
+    ordered_set_base() : root() {}
 
     /**
      * @brief Creates a new node and attaches it to the parent node `id` in
@@ -87,40 +80,36 @@ class ordered_set_base {
      */
     constexpr void create_node(node& id, bool dir) {
         if (dir == NODE_DIRECTIONS::LEFT)
-            id.left_child = std::unique_ptr<node>(new node());
+            id.left_child = std::make_unique<node>();
         else
-            id.right_child = std::unique_ptr<node>(new node());
+            id.right_child = std::make_unique<node>();
     }
 
     /**
      * @brief Wrapper function for cnt.
      */
-    [[nodiscard]] constexpr _Tp get_cnt(
-        const std::unique_ptr<node>& id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_cnt(const std::unique_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_COUNT : id->cnt;
     }
 
     /**
      * @brief Wrapper function for sum.
      */
-    [[nodiscard]] constexpr _Tp get_sum(
-        const std::unique_ptr<node>& id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_sum(const std::unique_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_SUM : id->sum;
     }
 
     /**
      * @brief Wrapper function for lowest_value.
      */
-    [[nodiscard]] constexpr _Tp get_lowest(
-        const std::unique_ptr<node>& id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_lowest(const std::unique_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_MIN : id->lowest_value;
     }
 
     /**
      * @brief Wrapper function for highest_value.
      */
-    [[nodiscard]] constexpr _Tp get_highest(
-        const std::unique_ptr<node>& id) const noexcept {
+    [[nodiscard]] constexpr _Tp get_highest(const std::unique_ptr<node>& id) const noexcept {
         return id == NULL_NODE ? NULL_NODE_MAX : id->highest_value;
     }
 
@@ -132,9 +121,7 @@ class ordered_set_base {
      * @param action Action specified (see @c NODE_UPDATE_ACTIONS)
      */
     constexpr void update_leaf(node& leaf, const _Tp& val, int action) {
-        if (leaf.cnt == 0 && (action == NODE_UPDATE_ACTIONS::REMOVE_ONCE ||
-                              action == NODE_UPDATE_ACTIONS::REMOVE_ALL))
-            return;
+        if (leaf.cnt == 0 && (action == NODE_UPDATE_ACTIONS::REMOVE_ONCE || action == NODE_UPDATE_ACTIONS::REMOVE_ALL)) return;
 
         switch (action) {
             case NODE_UPDATE_ACTIONS::ADD_ONCE:
@@ -164,10 +151,8 @@ class ordered_set_base {
     constexpr void update_from_childs(node& id) {
         id.cnt = get_cnt(id.left_child) + get_cnt(id.right_child);
         id.sum = get_sum(id.left_child) + get_sum(id.right_child);
-        id.lowest_value =
-            std::min(get_lowest(id.left_child), get_lowest(id.right_child));
-        id.highest_value =
-            std::max(get_highest(id.left_child), get_highest(id.right_child));
+        id.lowest_value = std::min(get_lowest(id.left_child), get_lowest(id.right_child));
+        id.highest_value = std::max(get_highest(id.left_child), get_highest(id.right_child));
     }
 
     /**
@@ -185,11 +170,7 @@ class ordered_set_base {
      * `update_from_childs`.
      *
      */
-    void update(node& id,
-                const _Tp& l,
-                const _Tp& r,
-                const _Tp& val,
-                int action) {
+    void update(node& id, const _Tp& l, const _Tp& r, const _Tp& val, int action) {
         if (l == r) {
             update_leaf(id, val, action);
             return;
@@ -197,12 +178,10 @@ class ordered_set_base {
 
         _Tp mid = std::midpoint(l, r);
         if (val <= mid) {
-            if (id.left_child == NULL_NODE)
-                create_node(id, NODE_DIRECTIONS::LEFT);
+            if (id.left_child == NULL_NODE) create_node(id, NODE_DIRECTIONS::LEFT);
             update(*(id.left_child), l, mid, val, action);
         } else {
-            if (id.right_child == NULL_NODE)
-                create_node(id, NODE_DIRECTIONS::RIGHT);
+            if (id.right_child == NULL_NODE) create_node(id, NODE_DIRECTIONS::RIGHT);
             update(*(id.right_child), mid + 1, r, val, action);
         }
 
@@ -218,22 +197,14 @@ class ordered_set_base {
      * @param u Left boundary of the query range.
      * @param v Right boundary of the query range.
      */
-    [[nodiscard]] constexpr _Tp get(node& id,
-                                    const _Tp& l,
-                                    const _Tp& r,
-                                    _Tp u,
-                                    _Tp v) const {
-        if (id.out_of_bound(u, v))
-            return NULL_NODE_SUM;
-        if (id.contained_by(u, v))
-            return id.cnt;
+    [[nodiscard]] constexpr _Tp get(node& id, const _Tp& l, const _Tp& r, _Tp u, _Tp v) const {
+        if (id.out_of_bound(u, v)) return NULL_NODE_SUM;
+        if (id.contained_by(u, v)) return id.cnt;
 
         _Tp mid = std::midpoint(l, r);
         _Tp result = 0;
-        if (id.left_child != NULL_NODE)
-            result += get(*(id.left_child), l, mid, u, v);
-        if (id.right_child != NULL_NODE)
-            result += get(*(id.right_child), mid + 1, r, u, v);
+        if (id.left_child != NULL_NODE) result += get(*(id.left_child), l, mid, u, v);
+        if (id.right_child != NULL_NODE) result += get(*(id.right_child), mid + 1, r, u, v);
         return result;
     }
 
@@ -249,20 +220,15 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] constexpr _Tp k_largest(node& id,
-                                          const _Tp& l,
-                                          const _Tp& r,
-                                          size_t k) const {
-        if (l == r)
-            return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
+    [[nodiscard]] constexpr _Tp k_largest(node& id, const _Tp& l, const _Tp& r, size_t k) const {
+        if (l == r) return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
 
         _Tp mid = std::midpoint(l, r);
 
         if (get_cnt(id.left_child) >= k)
             return k_largest(*(id.left_child), l, mid, k);
         else if (id.right_child != NULL_NODE)
-            return k_largest(*(id.right_child), mid + 1, r,
-                             k - get_cnt(id.left_child));
+            return k_largest(*(id.right_child), mid + 1, r, k - get_cnt(id.left_child));
         else
             return NULL_NODE_MIN;
     }
@@ -278,12 +244,8 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] constexpr _Tp lower_bound(node& id,
-                                            const _Tp& l,
-                                            const _Tp& r,
-                                            const _Tp& val) const {
-        if (l == r)
-            return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
+    [[nodiscard]] constexpr _Tp lower_bound(node& id, const _Tp& l, const _Tp& r, const _Tp& val) const {
+        if (l == r) return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
 
         _Tp mid = std::midpoint(l, r);
         if (id.left_child != NULL_NODE && get_highest(id.left_child) >= val)
@@ -305,12 +267,8 @@ class ordered_set_base {
      * @return Either said value or RB when all traversed nodes are either empty
      * or null (i.e. no such value exists).
      */
-    [[nodiscard]] constexpr _Tp upper_bound(node& id,
-                                            const _Tp& l,
-                                            const _Tp& r,
-                                            const _Tp& val) const {
-        if (l == r)
-            return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
+    [[nodiscard]] constexpr _Tp upper_bound(node& id, const _Tp& l, const _Tp& r, const _Tp& val) const {
+        if (l == r) return id.cnt ? id.lowest_value : EMPTY_NODE_MIN;
 
         _Tp mid = std::midpoint(l, r);
         if (id.right_child != NULL_NODE && get_lowest(id.right_child) <= val)

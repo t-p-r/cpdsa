@@ -35,7 +35,7 @@ class ordered_set : private ordered_set_base<_Tp, LB, RB> {
     /**
      * @brief Create an ordered_set with no elements.
      */
-    ordered_set() = default;
+    constexpr ordered_set() = default;
 
     /**
      * @brief Returns one past the largest number allowed to be added.
