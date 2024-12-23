@@ -24,7 +24,19 @@ namespace cpdsa {
  */
 #if __cplusplus >= 202002L
 template <typename _Tp>
-concept Median_heap_element_type = std::three_way_comparable<_Tp> && std::convertible_to<_Tp, double>;
+concept Median_heap_element_type = requires(_Tp a, _Tp b) {
+    a >= b;
+    static_cast<double>(a);
+};
+#else
+template <class, class = void>
+struct has_greater_than_operator : std::false_type {};
+
+template <typename _Tp>
+struct has_greater_than_operator<
+    _Tp,
+    typename std::enable_if<std::is_same<decltype(std::declval<_Tp>() > std::declval<_Tp>()), bool>::value>::type>
+    : std::true_type {};
 #endif
 
 /**
@@ -56,11 +68,14 @@ class median_heap {
    private:
 #if __cplusplus < 202002L  // C++11/14/17
     static_assert(std::is_convertible<_Tp, double>::value, "median heap element must be convertible to double");
-    // TODO: assert <=>
+    static_assert(has_greater_than_operator<_Tp>::value, "element type must have > operator");
 #endif
 
-    std::priority_queue<_Tp> lower_heap;
-    std::priority_queue<_Tp, std::vector<_Tp>, std::greater<_Tp>> higher_heap;
+    typedef _Tp value_type;
+    typedef const _Tp& const_reference;
+
+    std::priority_queue<value_type> lower_heap;
+    std::priority_queue<value_type, std::vector<value_type>, std::greater<value_type>> higher_heap;
 
     /**
      * @brief Maintain the size difference between the heaps.
@@ -88,7 +103,7 @@ class median_heap {
      *  @brief  Add data to the container.
      *  @param x Data to be added.
      */
-    void push(const _Tp& x) {
+    void push(const value_type& x) {
         if (higher_heap.empty() || x >= higher_heap.top())
             higher_heap.push(x);
         else
@@ -109,10 +124,14 @@ class median_heap {
 
     /**
      *  @brief Remove all elements from the container.
+     *
+     *  @note Really no cleaner way to do this since the heap arrays are private.
      */
     void clear() {
-        while (!lower_heap.empty()) lower_heap.pop();
-        while (!higher_heap.empty()) higher_heap.pop();
+        while (!lower_heap.empty())
+            lower_heap.pop();
+        while (!higher_heap.empty())
+            higher_heap.pop();
     }
 
     /**
@@ -129,17 +148,19 @@ class median_heap {
      * @return The discrete median (with a container of size @a n, its
      * @a (n+1)/2-th largest element) of the container.
      */
-    [[nodiscard]] const _Tp& discrete_median() const {
-        if (lower_heap.size() == higher_heap.size()) return lower_heap.top();
+    [[nodiscard]] const_reference discrete_median() const {
+        if (lower_heap.size() == higher_heap.size())
+            return lower_heap.top();
         return higher_heap.top();
     }
 
     /**
      *  @return The median of the container.
      */
-    [[nodiscard]] const double median() const {
-        if (lower_heap.size() == higher_heap.size()) return 1.0 * (lower_heap.top() + higher_heap.top()) / 2;
-        return higher_heap.top();
+    [[nodiscard]] double median() const {
+        if (lower_heap.size() == higher_heap.size())
+            return static_cast<double>(lower_heap.top() + higher_heap.top()) / 2;
+        return static_cast<double>(higher_heap.top());
     }
 };
 }  // namespace cpdsa
