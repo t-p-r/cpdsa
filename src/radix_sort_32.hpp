@@ -1,3 +1,9 @@
+/**
+ * CPDSA: 32-bit radix sort -*- C++ -*-
+ *
+ * @file src/radix_sort_32.hpp
+ */
+
 #ifndef CPDSA_RADIX_SORT_32_HPP
 #define CPDSA_RADIX_SORT_32_HPP
 
@@ -37,14 +43,14 @@ void radix_sort_32(Iterator begin, Iterator end) {
     // bits 15 -> 0, auto convert to unsigned
     static auto lower_half = [](uint32_t s) { return (s & (BUCKET_SIZE - 1)); };
 
-    const size_t N = std::distance(begin, end);
+    const size_t N_elem = std::distance(begin, end);
 
     // used to pigeonhole elements based on their upper/lower half
     // note: add 262KB to stack
     std::array<size_t, BUCKET_SIZE> bucket;
 
     // manual allocation is about 3-5% faster than using a vector
-    std::vector<size_t> lower_half_order(N);
+    std::vector<size_t> lower_half_order(N_elem);
 
     // FIRST ITERATION: sort by lower half ------------------------------------
     // lesson learnt: turns out fill() can decay to memset
@@ -56,7 +62,7 @@ void radix_sort_32(Iterator begin, Iterator end) {
     for (size_t i = 1; i < (BUCKET_SIZE); i++)
         bucket[i] += bucket[i - 1];
 
-    for (size_t i = 0; i < N; ++i)
+    for (size_t i = 0; i < N_elem; ++i)
         lower_half_order[--bucket[lower_half(begin[i])]] = i;
 
     // SECOND ITERATION: sort by upper half -----------------------------------
@@ -68,7 +74,7 @@ void radix_sort_32(Iterator begin, Iterator end) {
     for (size_t i = 1; i < (BUCKET_SIZE); i++)
         bucket[i] += bucket[i - 1];
 
-    std::vector<uint32_t> result(N);
+    std::vector<uint32_t> result(N_elem);
 
     for (auto it = lower_half_order.rbegin(); it != lower_half_order.rend();
          ++it) {
