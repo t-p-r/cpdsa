@@ -46,11 +46,11 @@ void radix_sort_32(Iterator begin, Iterator end) {
     const size_t N_elem = std::distance(begin, end);
 
     // used to pigeonhole elements based on their upper/lower half
-    // note: add 262KB to stack
+    // note: add 256-512KB to stack
     std::array<size_t, BUCKET_SIZE> bucket;
 
     // manual allocation is about 3-5% faster than using a vector
-    std::vector<size_t> lower_half_order(N_elem);
+    std::vector<size_t> sorted_by_lower_half(N_elem);
 
     // FIRST ITERATION: sort by lower half ------------------------------------
     // lesson learnt: turns out fill() can decay to memset
@@ -59,11 +59,10 @@ void radix_sort_32(Iterator begin, Iterator end) {
     for (auto it = begin; it != end; ++it)
         bucket[lower_half(*it)]++;
 
-    for (size_t i = 1; i < (BUCKET_SIZE); i++)
-        bucket[i] += bucket[i - 1];
+    std::partial_sum(bucket.begin(), bucket.end(), bucket.begin());
 
     for (size_t i = 0; i < N_elem; ++i)
-        lower_half_order[--bucket[lower_half(begin[i])]] = i;
+        sorted_by_lower_half[--bucket[lower_half(begin[i])]] = begin[i];
 
     // SECOND ITERATION: sort by upper half -----------------------------------
     bucket.fill(0);
@@ -71,18 +70,13 @@ void radix_sort_32(Iterator begin, Iterator end) {
     for (auto it = begin; it != end; ++it)
         bucket[upper_half(*it)]++;
 
-    for (size_t i = 1; i < (BUCKET_SIZE); i++)
-        bucket[i] += bucket[i - 1];
+    std::partial_sum(bucket.begin(), bucket.end(), bucket.begin());
 
-    std::vector<uint32_t> result(N_elem);
-
-    for (auto it = lower_half_order.rbegin(); it != lower_half_order.rend();
-         ++it) {
-        auto elem = begin[*it];
-        result[--bucket[upper_half(elem)]] = elem;
+    for (auto it = sorted_by_lower_half.rbegin();
+         it != sorted_by_lower_half.rend(); ++it) {
+        begin[--bucket[upper_half(*it)]] = *it;
     }
 
-    // Final copy back to [begin, end)
 #if __cplusplus >= 201703L
     if constexpr (std::is_signed<value_type>::value) {
 #else
@@ -91,16 +85,12 @@ void radix_sort_32(Iterator begin, Iterator end) {
         // In this case result will actually have the negative numbers at the
         // end (since they have larger values when converted to unsigned).
         // Therefore we have to "rotate" that negative part to the front.
-        auto first_negative = result.begin();
-        while (first_negative != result.end() &&
-               static_cast<int32_t>(*first_negative) >= 0)
-            first_negative++;
-        std::rotate(result.begin(), first_negative, result.end());
+        auto first_negative =
+            std::find_if(begin, end, [](value_type x) { return x < 0; });
+        std::rotate(begin, first_negative, end);
     }
-
-    std::copy(result.begin(), result.end(), begin);
 }
 
-} // namespace cpdsa
+}  // namespace cpdsa
 
-#endif // CPDSA_RADIX_SORT_32_HPP
+#endif  // CPDSA_RADIX_SORT_32_HPP
