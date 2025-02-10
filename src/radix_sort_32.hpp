@@ -17,34 +17,20 @@
 
 namespace cpdsa {
 
-#if __cplusplus >= 202002L
-template <typename Iterator>
-concept RAIterator32 = std::random_access_iterator<Iterator> && requires {
-    sizeof(typename std::iterator_traits<Iterator>::value_type) <= 4;
-};
-template <typename Iterator>
-concept RAIterator64 = std::random_access_iterator<Iterator> && requires {
-    sizeof(typename std::iterator_traits<Iterator>::value_type) == 8;
-};
-#endif
-
 /**
  * @brief Stably sort a range [begin, end) of 32-bit (or narrower) integers.
  * @note Implement an algorithm roughly similar to the one used in building
  * suffix arrays.
  */
-#if __cplusplus >= 202002L
-template <RAIterator32 Iterator>
-#else
 template <typename Iterator>
-#endif
 void radix_sort_32(Iterator begin, Iterator end) {
     using value_type = typename std::iterator_traits<Iterator>::value_type;
 
-#if __cplusplus < 202002L
-    static_assert(sizeof(typename std::iterator_traits<Iterator>::value_type) <=
-                      4;
-                  "elements must be 32-bit (or narrower) integers");
+#if __cplusplus >= 201103L
+    static_assert(
+        sizeof(typename std::iterator_traits<Iterator>::value_type) <= 4 &&
+            std::is_integral<value_type>::value,
+        "elements must be 32-bit (or narrower) integers");
     static_assert(
         std::is_base_of<
             std::random_access_iterator_tag,
