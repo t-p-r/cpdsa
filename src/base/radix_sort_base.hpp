@@ -8,55 +8,38 @@
 #define RADIX_SORT_BASE_HPP
 
 #include <array>
-#include <cstdint>
 #include <type_traits>
 #include <vector>
 
 namespace cpdsa {
-
-#define BUCKET_SIZE (1 << 16)
-
-// bits 15 -> 0, auto convert to unsigned
-inline uint16_t __bits_15_0(uint32_t s) {
-    return (s & (BUCKET_SIZE - 1));
-};
-
-// bits 31 -> 16, auto convert to unsigned
-inline uint16_t __bits_31_16(uint32_t s) {
-    return (s >> 16);
-};
-
-// bits 47 -> 32, auto convert to unsigned
-inline uint16_t __bits_47_32(uint64_t s) {
-    return __bits_15_0(s >> 32);
-};
-
-// bits 63 -> 48, auto convert to unsigned
-inline uint16_t __bits_63_48(uint64_t s) {
-    return __bits_31_16(s >> 32);
-};
 
 /**
  * @brief Counting sort the sequence [source_first, source_last), put result in
  * [dest_first, dest_first + source_last - source_first)
  * @param f Bucket/radix function (must be one of the four right above)
  */
-template <typename IteratorSource,
+template <std::size_t _Bucket_size,
+          typename IteratorSource,
           typename IteratorDest,
-          typename RadixFunction>
+          typename value_type =
+              typename std::iterator_traits<IteratorSource>::value_type>
 inline void __do_partial_radix_sort(IteratorSource source_first,
                                     IteratorSource source_last,
                                     IteratorDest dest_first,
-                                    RadixFunction radix_func) {
-    const size_t N_elem = std::distance(source_first, source_last);
-    // note: add 256-512KB to stack
-    std::array<size_t, BUCKET_SIZE> bucket;
+                                    std::size_t offset) {
+    const std::size_t N_elem = std::distance(source_first, source_last);
+    auto radix_func = [offset](value_type s) {
+        return ((s >> offset) & (_Bucket_size - 1));
+    };
+    // note: add 256-512KB to stack for 16-bit radix
+    std::array<std::size_t, _Bucket_size> bucket;
     // note: fill() can decay to memset
     bucket.fill(0);
+    // TODO: replace with SIMD
     for (auto it = source_first; it != source_last; ++it)
         bucket[radix_func(*it)]++;
     std::partial_sum(bucket.begin(), bucket.end(), bucket.begin());
-    for (size_t i = N_elem; i-- > 0;)
+    for (std::size_t i = N_elem; i-- > 0;)  // black magic
         dest_first[--bucket[radix_func(source_first[i])]] = source_first[i];
 }
 
@@ -82,28 +65,22 @@ inline void __do_final_rotation(Iterator first,
 }
 
 template <
+    std::size_t _Radix,
+    std::size_t _Bucket_size = (1UL << _Radix),
     typename Iterator,
-    typename value_type = typename std::iterator_traits<Iterator>::value_type>
-inline void __radix_sort_32(Iterator first, Iterator last) {
-    std::vector<uint32_t> tmp(std::distance(first, last));
-    __do_partial_radix_sort(first, last, tmp.begin(), __bits_15_0);
-    __do_partial_radix_sort(tmp.begin(), tmp.end(), first, __bits_31_16);
+    typename value_type = typename std::iterator_traits<Iterator>::value_type,
+    std::size_t type_width = sizeof(value_type) * 8U>
+inline void __radix_sort(Iterator first, Iterator last) {
+    std::vector<value_type> tmp(std::distance(first, last));
+    std::size_t offset = 0;
+    while (offset < type_width) {
+        __do_partial_radix_sort<_Bucket_size>(first, last, tmp.begin(), offset);
+        __do_partial_radix_sort<_Bucket_size>(tmp.begin(), tmp.end(), first,
+                                              offset + _Radix);
+        offset += _Radix * 2;  // compiler knows
+    }
     __do_final_rotation(first, last, std::is_signed<value_type>());
 }
-
-template <
-    typename Iterator,
-    typename value_type = typename std::iterator_traits<Iterator>::value_type>
-inline void __radix_sort_64(Iterator first, Iterator last) {
-    std::vector<uint64_t> tmp(std::distance(first, last));
-    __do_partial_radix_sort(first, last, tmp.begin(), __bits_15_0);
-    __do_partial_radix_sort(tmp.begin(), tmp.end(), first, __bits_31_16);
-    __do_partial_radix_sort(first, last, tmp.begin(), __bits_47_32);
-    __do_partial_radix_sort(tmp.begin(), tmp.end(), first, __bits_63_48);
-    __do_final_rotation(first, last, std::is_signed<value_type>());
-}
-
-#undef BUCKET_SIZE
 
 }  // namespace cpdsa
 

@@ -12,40 +12,34 @@
 namespace cpdsa {
 
 /**
- *  @brief Sort the elements of a sequence of integral types.
+ *  @brief Radix sort the elements of a sequence of integral types.
  *  @ingroup sorting_algorithms
  *  @param   first   An iterator.
  *  @param   last    Another iterator.
+ *  @tparam  _Radix  (optional) The bit width for partitioning elements.
  *  @return  Nothing.
  *
- *  @note Sorts the elements in the range `[first, last)` in ascending order,
- *  such that for each iterator `i` in the range `[first, last - 1)`,
- *  `*(i+1) < *i` is false.
+ *  @note The larger `_Radix` is, the more stack memory the algorithm takes.
+ *  
+ *  In all cases `_Radix` should not be set higher than 16 in case of stack overflow.
  *
  *  The relative ordering of equivalent elements is preserved.
  */
-template <typename Iterator>
+template <std::size_t _Radix = 8, typename Iterator>
 inline void radix_sort(Iterator first, Iterator last) {
     typedef std::iterator_traits<Iterator>              iter_traits;
     typedef typename iter_traits::value_type            value_type;
     typedef typename iter_traits::iterator_category     iter_category;
 
+    static_assert(std::is_integral<value_type>::value,
+                  "elements must be of an integral type");
+    static_assert(_Radix <= sizeof(value_type) * 8U,
+                  "radix must not exceed type width");
     static_assert(
         std::is_base_of<std::random_access_iterator_tag, iter_category>::value,
         "first and last require random access iterators");
 
-    static_assert(std::is_integral<value_type>::value,
-                  "elements must be of an integral type");
-
-#if __cplusplus >= 201703L
-    if constexpr (sizeof(value_type) <= 4) {  // pedantic moment
-#else
-    if (sizeof(value_type) <= 4) {
-#endif
-        __radix_sort_32(first, last);
-    } else {
-        __radix_sort_64(first, last);
-    }
+    __radix_sort<_Radix>(first, last);
 }
 
 }  // namespace cpdsa
