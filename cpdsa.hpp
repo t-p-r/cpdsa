@@ -11,5 +11,5 @@
 #if __cplusplus >= 201102L
 #include "src/buffer_scan.hpp"
 #include "src/median_heap.hpp"
-#include "src/radix_sort_32.hpp"
+#include "src/radix_sort.hpp"
 #endif
