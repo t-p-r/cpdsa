@@ -1,4 +1,8 @@
-// Ordered set, base implementation -*- C++ -*-
+/**
+ * CPDSA: Ordered set, base implementation -*- C++ -*-
+ *
+ * @file src/base/ordered_set_base.hpp
+ */
 
 #ifndef CPDSA_ORDERED_SET_BASE
 #define CPDSA_ORDERED_SET_BASE
