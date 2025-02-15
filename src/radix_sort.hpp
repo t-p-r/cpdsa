@@ -35,6 +35,13 @@ inline void radix_sort(Iterator first, Iterator last) {
                   "elements must be of an integral type");
     static_assert(_Radix <= sizeof(value_type) * 8U,
                   "radix must not exceed type width");
+    // This is because the internal __radix_sort always does an even number of
+    // passes.
+    static_assert((sizeof(value_type) * 8U / _Radix +
+                   static_cast<bool>(sizeof(value_type) * 8U % _Radix)) %
+                          2 ==
+                      0,
+                  "ceiling of <type width> / _Radix must be even");
     static_assert(
         std::is_base_of<std::random_access_iterator_tag, iter_category>::value,
         "first and last require random access iterators");
