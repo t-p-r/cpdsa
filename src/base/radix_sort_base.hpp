@@ -14,19 +14,23 @@
 namespace cpdsa {
 
 /**
- * @brief Counting sort the sequence [source_first, source_last), put result in
- * [dest_first, dest_first + source_last - source_first)
- * @param f Bucket/radix function (must be one of the four right above)
+ * @brief Bucket sort the sequence `[source_first, source_last)`, put result
+ * in
+ * `[dest_first, dest_first + source_last - source_first)`
+ * @param offset this means that element X will be put into bucket number Y,
+ * where Y is the number represented by 8/16 bits immediately following the
+ * offset_th bit of X
+ * @note The relative ordering of equivalent elements is preserved.
  */
 template <std::size_t _Bucket_size,
           typename IteratorSource,
           typename IteratorDest,
           typename value_type =
               typename std::iterator_traits<IteratorSource>::value_type>
-inline void __do_partial_radix_sort(IteratorSource source_first,
-                                    IteratorSource source_last,
-                                    IteratorDest dest_first,
-                                    std::size_t offset) {
+inline void __do_bucket_sort(IteratorSource source_first,
+                             IteratorSource source_last,
+                             IteratorDest dest_first,
+                             std::size_t offset) {
     const std::size_t N_elem = std::distance(source_first, source_last);
     auto radix_func = [offset](value_type s) {
         return ((s >> offset) & (_Bucket_size - 1));
@@ -39,8 +43,8 @@ inline void __do_partial_radix_sort(IteratorSource source_first,
     for (auto it = source_first; it != source_last; ++it)
         bucket[radix_func(*it)]++;
     std::partial_sum(bucket.begin(), bucket.end(), bucket.begin());
-    for (std::size_t i = N_elem; i-- > 0;)  // black magic
-        dest_first[--bucket[radix_func(source_first[i])]] = source_first[i];
+    for (auto it = source_last; --it != source_first - 1;)  // black magic
+        dest_first[--bucket[radix_func(*it)]] = *it;
 }
 
 template <
@@ -74,9 +78,9 @@ inline void __radix_sort(Iterator first, Iterator last) {
     std::vector<value_type> tmp(std::distance(first, last));
     std::size_t offset = 0;
     while (offset < type_width) {
-        __do_partial_radix_sort<_Bucket_size>(first, last, tmp.begin(), offset);
-        __do_partial_radix_sort<_Bucket_size>(tmp.begin(), tmp.end(), first,
-                                              offset + _Radix);
+        __do_bucket_sort<_Bucket_size>(first, last, tmp.begin(), offset);
+        __do_bucket_sort<_Bucket_size>(tmp.begin(), tmp.end(), first,
+                                       offset + _Radix);
         offset += _Radix * 2;  // compiler knows
     }
     __do_final_rotation(first, last, std::is_signed<value_type>());

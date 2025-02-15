@@ -19,9 +19,9 @@ namespace cpdsa {
  *  @tparam  _Radix  (optional) The bit width for partitioning elements.
  *  @return  Nothing.
  *
- *  @note The larger `_Radix` is, the more stack memory the algorithm takes.
- *  
- *  In all cases `_Radix` should not be set higher than 16 in case of stack overflow.
+ *  @note The larger `_Radix` is, the more stack memory the algorithm takes; in
+ *  all cases it should be either 8 (aka 2KB of stack) or 16 (aka 512 KB of
+ *  stack).
  *
  *  The relative ordering of equivalent elements is preserved.
  */
