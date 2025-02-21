@@ -28,6 +28,7 @@ Features has been self-tested on [asimon](https://github.com/t-p-r/asimon) and t
   - `median_heap` - a container maintaining its median.
   - `ordered_set` - dynamic segment tree to manage discrete values.
   - `buffer_scan` - a fast (~2x faster than `std::cin`, ~3x for `scanf`) way to read integral types (`int`,`size_t`, ...) from `stdin`.
+  - `radix_sort` - very fast sort  (3.5 - 8.5x faster than `std::sort`) for integral types.
 - Experimental:
   
 - In progess:
