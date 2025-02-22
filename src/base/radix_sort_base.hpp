@@ -8,6 +8,7 @@
 #define RADIX_SORT_BASE_HPP
 
 #include <algorithm>
+#include <numeric>
 #include <array>
 #include <type_traits>
 #include <vector>
