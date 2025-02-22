@@ -42,7 +42,9 @@ inline void __do_bucket_sort(IteratorSource source_first,
     // TODO: replace with SIMD
     for (auto it = source_first; it != source_last; ++it)
         bucket[radix_func(*it)]++;
-    std::partial_sum(bucket.begin(), bucket.end(), bucket.begin());
+    for (std::size_t i = 1; i < _Bucket_size; ++i) {
+        bucket[i] += bucket[i - 1];
+    }
     for (auto it = source_last; --it != source_first - 1;)  // black magic
         dest_first[--bucket[radix_func(*it)]] = *it;
 }
