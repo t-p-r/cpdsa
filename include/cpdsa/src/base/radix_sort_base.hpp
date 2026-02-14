@@ -7,8 +7,8 @@
 #ifndef RADIX_SORT_BASE_HPP
 #define RADIX_SORT_BASE_HPP
 
-#include <algorithm>
 #include <array>
+#include <limits>
 #include <numeric>
 #include <type_traits>
 #include <vector>
@@ -34,7 +34,8 @@ inline void __do_bucket_sort(IteratorSource source_first,
                              IteratorDest dest_first,
                              std::size_t offset) {
     auto radix_func = [offset](value_type s) {
-        return ((s >> offset) & (_Bucket_size - 1));
+        using unsigned_type = typename std::make_unsigned<value_type>::type;
+        return ((static_cast<unsigned_type>(s) >> offset) & (_Bucket_size - 1));
     };
     // note: add 256-512KB to stack for 16-bit radix
     std::array<std::size_t, _Bucket_size> bucket;
@@ -52,19 +53,18 @@ template <
     typename Iterator,
     typename value_type = typename std::iterator_traits<Iterator>::value_type>
 inline typename std::enable_if<std::is_unsigned<value_type>::value, void>::type
-__do_final_rotation(Iterator first, Iterator last) {}
+__flip_sign_bit(Iterator first, Iterator last) {}
 
 template <
     typename Iterator,
     typename value_type = typename std::iterator_traits<Iterator>::value_type>
 inline typename std::enable_if<std::is_signed<value_type>::value, void>::type
-__do_final_rotation(Iterator first, Iterator last) {
-    // In this case result will actually have the negative numbers at the
-    // end (since they have larger values when converted to unsigned).
-    // Therefore we have to "rotate" that negative part to the front.
-    auto first_negative =
-        std::find_if(first, last, [](value_type x) { return x < 0; });
-    std::rotate(first, first_negative, last);
+__flip_sign_bit(Iterator first, Iterator last) {
+    // In two's complement systems, since the highest bit for negative numbers
+    // is 1, our radix sort algorithm would therefore put those numbers at the
+    // top unless we do this hideous thing before and after it.
+    for (auto it = first; it != last; ++it)
+        *it ^= std::numeric_limits<value_type>::min();
 }
 
 template <
@@ -74,6 +74,7 @@ template <
     typename value_type = typename std::iterator_traits<Iterator>::value_type,
     std::size_t type_width = sizeof(value_type) * 8U>
 inline void __radix_sort(Iterator first, Iterator last) {
+    __flip_sign_bit(first, last);
     std::vector<value_type> tmp(std::distance(first, last));
     std::size_t offset = 0;
     while (offset < type_width) {
@@ -82,7 +83,7 @@ inline void __radix_sort(Iterator first, Iterator last) {
                                        offset + _Radix);
         offset += _Radix * 2;  // compiler knows
     }
-    __do_final_rotation(first, last);
+    __flip_sign_bit(first, last);
 }
 
 }  // namespace cpdsa
