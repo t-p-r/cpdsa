@@ -34,8 +34,7 @@ inline void __do_bucket_sort(IteratorSource source_first,
                              IteratorDest dest_first,
                              std::size_t offset) {
     auto radix_func = [offset](value_type s) {
-        using unsigned_type = typename std::make_unsigned<value_type>::type;
-        return ((static_cast<unsigned_type>(s) >> offset) & (_Bucket_size - 1));
+        return ((s >> offset) & (_Bucket_size - 1));
     };
     // note: add 256-512KB to stack for 16-bit radix
     std::array<std::size_t, _Bucket_size> bucket;
