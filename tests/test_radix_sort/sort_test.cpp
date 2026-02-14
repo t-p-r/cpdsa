@@ -54,7 +54,7 @@ int32_t main() {
     cpdsa::radix_sort(v2, v2 + n);
     auto start3 =
         chrono::high_resolution_clock::now().time_since_epoch().count();
-    cpdsa::radix_sort<10>(v3, v3 + n);
+    cpdsa::radix_sort<16>(v3, v3 + n);
     auto start4 =
         chrono::high_resolution_clock::now().time_since_epoch().count();
 
