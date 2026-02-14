@@ -27,8 +27,8 @@ namespace cpdsa {
  */
 template <std::size_t _Radix = 8, typename Iterator>
 inline void radix_sort(Iterator first, Iterator last) {
-    typedef std::iterator_traits<Iterator> iter_traits;
-    typedef typename iter_traits::value_type value_type;
+    typedef std::iterator_traits<Iterator>          iter_traits;
+    typedef typename iter_traits::value_type        value_type;
     typedef typename iter_traits::iterator_category iter_category;
 
     static_assert(std::is_integral<value_type>::value,

@@ -14,7 +14,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(MSVC)
     add_compile_options(/Zi)
 else() # gcc, clang
-    add_compile_options(-O3 -Wall -Wextra -pipe -g)
+    add_compile_options(-O3 -Wall -Wextra -pipe -g -march=native)
 endif()
 
 # Set lib folder

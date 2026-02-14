@@ -18,7 +18,7 @@ int rand(int l, int r) {
     return uniform_int_distribution<int>(l, r)(rng);
 }
 
-constexpr size_t MAX_SIZE = (1 << 20);
+constexpr size_t MAX_SIZE = (1 << 24);
 
 static int v[MAX_SIZE], v2[MAX_SIZE], v3[MAX_SIZE];
 
