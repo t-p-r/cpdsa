@@ -20,8 +20,8 @@ namespace cpdsa {
  * in
  * `[dest_first, dest_first + source_last - source_first)`
  * @param offset this means that element X will be put into bucket number Y,
- * where Y is the number represented by 8/16 bits immediately following the
- * offset_th bit of X
+ * where Y is the number represented by bits `[offset, offset + _Radix]` (from
+ * low to high) of X.
  * @note The relative ordering of equivalent elements is preserved.
  */
 template <std::size_t _Bucket_size,
@@ -51,13 +51,13 @@ inline void __do_bucket_sort(IteratorSource source_first,
 template <
     typename Iterator,
     typename value_type = typename std::iterator_traits<Iterator>::value_type>
-inline std::enable_if<std::is_unsigned<value_type>::value, void>::type
+inline typename std::enable_if<std::is_unsigned<value_type>::value, void>::type
 __do_final_rotation(Iterator first, Iterator last) {}
 
 template <
     typename Iterator,
     typename value_type = typename std::iterator_traits<Iterator>::value_type>
-inline std::enable_if<std::is_signed<value_type>::value, void>::type
+inline typename std::enable_if<std::is_signed<value_type>::value, void>::type
 __do_final_rotation(Iterator first, Iterator last) {
     // In this case result will actually have the negative numbers at the
     // end (since they have larger values when converted to unsigned).
