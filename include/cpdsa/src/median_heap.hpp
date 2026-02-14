@@ -29,7 +29,7 @@ concept Median_heap_element_type = requires(_Tp a, _Tp b) {
     static_cast<double>(a);
 };
 #else
-template <class, class = void>
+template <typename, typename = void>
 struct has_greater_than_operator : std::false_type {};
 
 template <typename _Tp>

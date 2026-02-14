@@ -1,1 +1,25 @@
+# binary outputs
+**/bin
+*.a
+*.o
+*.so
+*.exe
+*.dll
 *.gch
+
+# cmake stuffs
+CMakeCache.txt
+Makefile
+*.cmake
+*.check_cache
+/CMakeFiles
+
+# fmt
+/_deps
+
+# allow our custom .cmake files
+!/cmake/*.cmake
+
+# clangd
+/.cache
+compile_commands.json
