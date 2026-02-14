@@ -52,7 +52,7 @@ template <
     typename Iterator,
     typename value_type = typename std::iterator_traits<Iterator>::value_type>
 inline typename std::enable_if<std::is_unsigned<value_type>::value, void>::type
-__flip_sign_bit(Iterator first, Iterator last) {}
+__flip_sign_bit(Iterator, Iterator) {}
 
 template <
     typename Iterator,
