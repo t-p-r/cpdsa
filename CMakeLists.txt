@@ -20,10 +20,4 @@ endif()
 # Set lib folder
 include_directories(include)
 
-file(GLOB cpdsa_src CONFIGURE_DEPENDS "src/*.hpp" "src/base/*.hpp")
-
-add_library(cpdsa INTERFACE ${cpdsa_src})
-
-
 add_executable(test_radix_sort tests/test_radix_sort/sort_test.cpp)
-# target_link_libraries(test_radix_sort PRIVATE cpdsa_src)
