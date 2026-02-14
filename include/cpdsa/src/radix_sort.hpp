@@ -45,7 +45,9 @@ inline void radix_sort(Iterator first, Iterator last) {
     static_assert(
         std::is_base_of<std::random_access_iterator_tag, iter_category>::value,
         "first and last require random access iterators");
-
+        
+    if (first == last)
+        return;
     __radix_sort<_Radix>(first, last);
 }
 
