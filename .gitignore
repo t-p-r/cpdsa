@@ -13,6 +13,7 @@ Makefile
 *.cmake
 *.check_cache
 /CMakeFiles
+/build
 
 # fmt
 /_deps
