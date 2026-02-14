@@ -2,7 +2,7 @@
  * CPDSA: Direct input from buffer, base implementation -*- C++ -*-
  * This is essentially a C source file.
  *
- * @file src/base/buffer_scan_base.hpp
+ * @file include/cpdsa/src/base/buffer_scan_base.hpp
  */
 
 #ifndef CPDSA_BUFFER_SCAN_BASE
@@ -47,12 +47,15 @@ template <typename _Tp>
     bool is_negative = false;
     int next_char = 0;
     while (!isdigit(next_char = __getc()) && next_char != '-') {
-        if (next_char == EOF) return 0;
+        if (next_char == EOF)
+            return 0;
     }
-    if (next_char == '-') is_negative = true, next_char = __getc();
+    if (next_char == '-')
+        is_negative = true, next_char = __getc();
     _Tp unsigned_result = 0;
     for (; isdigit(next_char); next_char = __getc())
-        unsigned_result = unsigned_result * 10 + next_char - '0';  // compiler will figure this one out
+        unsigned_result = unsigned_result * 10 + next_char -
+                          '0';  // compiler will figure this one out
     return (is_negative ? -unsigned_result : unsigned_result);
 }
 

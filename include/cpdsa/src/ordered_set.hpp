@@ -1,7 +1,7 @@
 /**
  * CPDSA: Ordered set -*- C++ -*-
- * 
- * @file src/ordered_set.hpp
+ *
+ * @file include/cpdsa/src/ordered_set.hpp
  */
 
 #ifndef CPDSA_ORDERED_SET
@@ -25,7 +25,8 @@ namespace cpdsa {
  * have time complexity @a O(log(X)) where @a X = @a RB - @a LB. @a LB and @a RB
  * must be specified if @c std::numeric_limits<_Tp> is not provided.
  */
-template <std::integral _Tp, _Tp LB = std::numeric_limits<_Tp>::min(),
+template <std::integral _Tp,
+          _Tp LB = std::numeric_limits<_Tp>::min(),
           _Tp RB = std::numeric_limits<_Tp>::max()>
 class ordered_set : private ordered_set_base<_Tp, LB, RB> {
    private:

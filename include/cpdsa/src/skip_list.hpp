@@ -1,7 +1,7 @@
 /**
  * CPDSA: Skip list implementation -*- C++ -*-
  *
- * @file src/skip_list.hpp
+ * @file include/cpdsa/src/skip_list.hpp
  */
 
 #ifndef CPDSA_SKIP_LIST

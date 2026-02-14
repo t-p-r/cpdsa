@@ -1,7 +1,7 @@
 /**
  * CPDSA: Median heap implementation -*- C++ -*-
  *
- * @file src/median_heap.hpp
+ * @file include/cpdsa/src/median_heap.hpp
  */
 
 #ifndef CPDSA_MEDIAN_HEAP
@@ -35,8 +35,9 @@ struct has_greater_than_operator : std::false_type {};
 template <typename _Tp>
 struct has_greater_than_operator<
     _Tp,
-    typename std::enable_if<std::is_same<decltype(std::declval<_Tp>() > std::declval<_Tp>()), bool>::value>::type>
-    : std::true_type {};
+    typename std::enable_if<
+        std::is_same<decltype(std::declval<_Tp>() > std::declval<_Tp>()),
+                     bool>::value>::type> : std::true_type {};
 #endif
 
 /**
@@ -67,15 +68,20 @@ template <typename _Tp>
 class median_heap {
    private:
 #if __cplusplus < 202002L  // C++11/14/17
-    static_assert(std::is_convertible<_Tp, double>::value, "median heap element must be convertible to double");
-    static_assert(has_greater_than_operator<_Tp>::value, "element type must have > operator");
+    static_assert(std::is_convertible<_Tp, double>::value,
+                  "median heap element must be convertible to double");
+    static_assert(has_greater_than_operator<_Tp>::value,
+                  "element type must have > operator");
 #endif
 
     typedef _Tp value_type;
     typedef const _Tp& const_reference;
 
     std::priority_queue<value_type> lower_heap;
-    std::priority_queue<value_type, std::vector<value_type>, std::greater<value_type>> higher_heap;
+    std::priority_queue<value_type,
+                        std::vector<value_type>,
+                        std::greater<value_type>>
+        higher_heap;
 
     /**
      * @brief Maintain the size difference between the heaps.
@@ -125,7 +131,8 @@ class median_heap {
     /**
      *  @brief Remove all elements from the container.
      *
-     *  @note Really no cleaner way to do this since the heap arrays are private.
+     *  @note Really no cleaner way to do this since the heap arrays are
+     * private.
      */
     void clear() {
         while (!lower_heap.empty())
@@ -137,12 +144,16 @@ class median_heap {
     /**
      *  @return The number of elements in the container.
      */
-    [[nodiscard]] const std::size_t size() const { return lower_heap.size() + higher_heap.size(); }
+    [[nodiscard]] std::size_t size() const {
+        return lower_heap.size() + higher_heap.size();
+    }
 
     /**
      *  @return @a true if the container is empty.
      */
-    [[nodiscard]] const bool empty() const { return lower_heap.empty() && higher_heap.empty(); }
+    [[nodiscard]] bool empty() const {
+        return lower_heap.empty() && higher_heap.empty();
+    }
 
     /**
      * @return The discrete median (with a container of size @a n, its
@@ -159,7 +170,8 @@ class median_heap {
      */
     [[nodiscard]] double median() const {
         if (lower_heap.size() == higher_heap.size())
-            return static_cast<double>(lower_heap.top() + higher_heap.top()) / 2;
+            return static_cast<double>(lower_heap.top() + higher_heap.top()) /
+                   2;
         return static_cast<double>(higher_heap.top());
     }
 };

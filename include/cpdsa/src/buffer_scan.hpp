@@ -3,7 +3,7 @@
  * Other than a few C++ type checks this is essentially a C source file.
  * That is why, for example, you will see size_t instead of std::size_t.
  *
- * @file src/buffer_scan.hpp
+ * @file include/cpdsa/src/buffer_scan.hpp
  */
 
 #ifndef CPDSA_BUFFER_SCAN
@@ -36,7 +36,7 @@ template <std::integral _Tp, std::integral... _Tps>
 #else
 template <typename _Tp, typename... _Tps>
 #endif
-void buffer_scan(_Tp &first_arg, _Tps &...rest_args) noexcept {
+void buffer_scan(_Tp& first_arg, _Tps&... rest_args) noexcept {
 #if __cplusplus < 202002L
     static_assert(std::is_integral<_Tp>::value, "arguments must be integral");
 #endif

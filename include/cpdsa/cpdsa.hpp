@@ -1,7 +1,7 @@
-/** 
+/**
  * CPDSA: Includes for precompiling -*- C++ -*-
- * 
- * @file cpdsa.hpp
+ *
+ * @file include/cpdsa/cpdsa.hpp
  */
 
 #if __cplusplus >= 202002L

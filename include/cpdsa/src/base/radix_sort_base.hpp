@@ -1,15 +1,15 @@
 /**
  * CPDSA: radix sort internal -*- C++ -*-
  *
- * @file src/base/radix_sort_base.hpp
+ * @file include/cpdsa/src/base/radix_sort_base.hpp
  */
 
 #ifndef RADIX_SORT_BASE_HPP
 #define RADIX_SORT_BASE_HPP
 
 #include <algorithm>
-#include <numeric>
 #include <array>
+#include <numeric>
 #include <type_traits>
 #include <vector>
 
@@ -33,7 +33,6 @@ inline void __do_bucket_sort(IteratorSource source_first,
                              IteratorSource source_last,
                              IteratorDest dest_first,
                              std::size_t offset) {
-    const std::size_t N_elem = std::distance(source_first, source_last);
     auto radix_func = [offset](value_type s) {
         return ((s >> offset) & (_Bucket_size - 1));
     };
@@ -52,16 +51,14 @@ inline void __do_bucket_sort(IteratorSource source_first,
 template <
     typename Iterator,
     typename value_type = typename std::iterator_traits<Iterator>::value_type>
-inline void __do_final_rotation(Iterator first,
-                                Iterator last,
-                                std::false_type /* value_type is unsigned */) {}
+inline std::enable_if<std::is_unsigned<value_type>::value, void>::type
+__do_final_rotation(Iterator first, Iterator last) {}
 
 template <
     typename Iterator,
     typename value_type = typename std::iterator_traits<Iterator>::value_type>
-inline void __do_final_rotation(Iterator first,
-                                Iterator last,
-                                std::true_type /* value_type is signed */) {
+inline std::enable_if<std::is_signed<value_type>::value, void>::type
+__do_final_rotation(Iterator first, Iterator last) {
     // In this case result will actually have the negative numbers at the
     // end (since they have larger values when converted to unsigned).
     // Therefore we have to "rotate" that negative part to the front.
@@ -85,7 +82,7 @@ inline void __radix_sort(Iterator first, Iterator last) {
                                        offset + _Radix);
         offset += _Radix * 2;  // compiler knows
     }
-    __do_final_rotation(first, last, std::is_signed<value_type>());
+    __do_final_rotation(first, last);
 }
 
 }  // namespace cpdsa
