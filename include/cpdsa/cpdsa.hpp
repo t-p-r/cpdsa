@@ -5,11 +5,11 @@
  */
 
 #if __cplusplus >= 202002L
-#include "src/ordered_set.hpp"
+#include "./ordered_set.hpp"
 #endif
 
 #if __cplusplus >= 201102L
-#include "src/buffer_scan.hpp"
-#include "src/median_heap.hpp"
-#include "src/radix_sort.hpp"
+#include "./buffer_scan.hpp"
+#include "./median_heap.hpp"
+#include "./radix_sort.hpp"
 #endif
