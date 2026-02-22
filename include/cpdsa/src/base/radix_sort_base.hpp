@@ -20,11 +20,11 @@ namespace cpdsa {
  * in
  * `[dest_first, dest_first + source_last - source_first)`
  * @param offset this means that element X will be put into bucket number Y,
- * where Y is the number represented by bits `[offset, offset + _Radix]` (from
- * low to high) of X.
+ * where Y is the number represented by the `_Radix` bits upwards from bit
+ * number `offset` of X.
  * @note The relative ordering of equivalent elements is preserved.
  */
-template <std::size_t _Bucket_size,
+template <std::size_t _N_buckets,
           typename IteratorSource,
           typename IteratorDest,
           typename value_type =
@@ -34,16 +34,38 @@ inline void __do_bucket_sort(IteratorSource source_first,
                              IteratorDest dest_first,
                              std::size_t offset) {
     auto radix_func = [offset](value_type s) {
-        return ((s >> offset) & (_Bucket_size - 1));
+        return ((s >> offset) & (_N_buckets - 1));
     };
-    // note: add 256-512KB to stack for 16-bit radix
-    std::array<std::size_t, _Bucket_size> bucket;
-    // note: fill() can decay to memset
+
+    /**
+     * First, we assume that the range [source_first, source_last) has been
+     * sorted in the order of bits below `offset`.
+     */
+    std::array<std::size_t, _N_buckets> bucket;
     bucket.fill(0);
-    // TODO: replace with SIMD
+
+    /**
+     * We now put elements into buckets according to the bits following
+     * `offset`.
+     */
     for (auto it = source_first; it != source_last; ++it)
         bucket[radix_func(*it)]++;
+
+    /**
+     * After computing the partial sum, if an element has `[offset, offset +
+     * _Radix]` equal to V, then we know that:
+     *   - There are bucket[V - 1] elements smaller than it.
+     *   - Its order doesn't exceed bucket[V].
+     */
     std::partial_sum(bucket.begin(), bucket.end(), bucket.begin());
+
+    /**
+     * Finally, we traverse backwards from `source_last`. We know for a fact
+     * that the element we're at is the biggest for its bucket (excluding
+     * elements that were iterated through). So its order is --bucket[V] (where
+     * V is defined above, and we decrement the bucket counter such that it will
+     * be the order of the next traversed element in this bucket).
+     */
     for (auto it = source_last; --it != source_first - 1;)  // black magic
         dest_first[--bucket[radix_func(*it)]] = *it;
 }
@@ -68,7 +90,7 @@ __flip_sign_bit(Iterator first, Iterator last) {
 
 template <
     std::size_t _Radix,
-    std::size_t _Bucket_size = (1UL << _Radix),
+    std::size_t _N_buckets = (1UL << _Radix),
     typename Iterator,
     typename value_type = typename std::iterator_traits<Iterator>::value_type,
     std::size_t type_width = sizeof(value_type) * 8U>
@@ -77,8 +99,8 @@ inline void __radix_sort(Iterator first, Iterator last) {
     std::vector<value_type> tmp(std::distance(first, last));
     std::size_t offset = 0;
     while (offset < type_width) {
-        __do_bucket_sort<_Bucket_size>(first, last, tmp.begin(), offset);
-        __do_bucket_sort<_Bucket_size>(tmp.begin(), tmp.end(), first,
+        __do_bucket_sort<_N_buckets>(first, last, tmp.begin(), offset);
+        __do_bucket_sort<_N_buckets>(tmp.begin(), tmp.end(), first,
                                        offset + _Radix);
         offset += _Radix * 2;  // compiler knows
     }
