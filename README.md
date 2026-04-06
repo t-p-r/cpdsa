@@ -14,7 +14,7 @@ This is a translation of [my personal archive](https://github.com/t-p-r/CS_archi
 
 After cloning the repository, you may want to precompile the master header `cpdsa.hpp`; in which case, do note that the set of compilation options (e.g `-O2`, `-DONLINE_JUDGE` or `-pipe`) should be the same between this header and the final program.
 
-To use, simply `#include "<path_to_CPDSA>/cpdsa.hpp"`. 
+To use, simply `#include "./include/cpdsa/cpdsa.hpp"`. 
 
 ~~If you feel daring, also `#include "<path_to_CPDSA>/cpdsa_experimental.hpp"`.~~
 
@@ -32,6 +32,7 @@ Features has been self-tested on [asimon](https://github.com/t-p-r/asimon) and t
 - Experimental:
   
 - In progess:
+   - `skip_list` - yet another ordered container
    - `bigint` - arbitrary-precision arithmetic.
    - `graph` - graph representation.
    - `tree` - tree representation.
