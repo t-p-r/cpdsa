@@ -8,7 +8,7 @@ This is a translation of [my personal archive](https://github.com/t-p-r/CS_archi
 
 ## Prerequisites
 
-- A C++ compiler (preferably GNU GCC 9.2+) set to compile in C++11 (`-std=c++11`) or newer standards. Some features are only supported by C++20.
+- A C++ compiler (preferably GNU GCC 9.2+) set to compile in C++11 (`-std=c++11`) or newer standards. Some features are only supported by C++20 and newer standards.
 
 ## Uses
 
